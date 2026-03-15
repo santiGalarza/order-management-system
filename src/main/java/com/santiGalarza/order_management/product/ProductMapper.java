@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ProductMapper {
     ProductResponseDto toProductResponseDto(Product product);
     Product productRequestDTOtoProduct(ProductRequestDto productRequestDTO);
