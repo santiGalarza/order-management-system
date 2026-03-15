@@ -1,12 +1,12 @@
 package com.santiGalarza.order_management.product;
-
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Service
 public class ProductService {
 
         /*
@@ -62,6 +62,10 @@ public class ProductService {
     }
 
     public void deleteProduct(UUID id) {
+        if(!productRepository.existsById(id)) {
+            throw new ProductNotFoundException(id);
+        }
+
         productRepository.deleteById(id);
     }
 
