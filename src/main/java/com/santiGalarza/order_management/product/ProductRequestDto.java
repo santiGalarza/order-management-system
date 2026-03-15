@@ -1,6 +1,6 @@
 package com.santiGalarza.order_management.product;
 
-import jakarta.persistence.Column;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,20 +13,26 @@ import java.math.BigDecimal;
 @Setter
 public class ProductRequestDto {
 
-    @NotNull
+    @NotEmpty
     private String name;
 
-    @Column(precision = 8, scale = 2)
     @NotNull
+    @Digits(integer = 6, fraction = 2)
     private BigDecimal price;
 
-    @Size(min = 8, max = 12)
     @NotEmpty
-    @NotNull
+    @Size(min = 8, max = 12)
     private String sku;
 
-    private boolean isActive;
-    private int minOrderQuantity;
-    private int stockQuantity;
-    private float weight;
+    @NotNull
+    private Boolean isActive;
+
+    @NotNull
+    private Integer minOrderQuantity;
+
+    @NotNull
+    private Integer stockQuantity;
+
+    @NotNull
+    private Float weight;
 }
