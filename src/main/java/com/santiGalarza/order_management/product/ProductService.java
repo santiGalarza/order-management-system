@@ -9,14 +9,6 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-        /*
-    get product with id
-    get list of all products
-    create a new product POST
-    update an existing product PUT
-    delete product by id
-     */
-
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
@@ -68,16 +60,4 @@ public class ProductService {
 
         productRepository.deleteById(id);
     }
-
-    /*
-    product.setName(productRequestDto.getName());
-        product.setPrice(productRequestDto.getPrice());
-        product.setSku(productRequestDto.getSku());
-        product.setActive(productRequestDto.isActive());
-        product.setMinOrderQuantity(productRequestDto.getMinOrderQuantity());
-        product.setStockQuantity(productRequestDto.getStockQuantity());
-        product.setWeight(productRequestDto.getWeight());
-        product.setUpdatedAt(LocalDateTime.now());
-
-     */
 }
