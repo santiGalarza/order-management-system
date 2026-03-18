@@ -1,6 +1,8 @@
 package com.santiGalarza.order_management.product;
 
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +22,13 @@ public class ProductPatchRequestDto {
     private String sku;
 
     private Boolean isActive;
+
+    @Positive
     private Integer minOrderQuantity;
+
+    @PositiveOrZero
     private Integer stockQuantity;
+
+    @Positive
     private Float weight;
 }

@@ -1,9 +1,6 @@
 package com.santiGalarza.order_management.product;
 
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,11 +25,14 @@ public class ProductRequestDto {
     private Boolean isActive;
 
     @NotNull
+    @Positive
     private Integer minOrderQuantity;
 
     @NotNull
+    @PositiveOrZero
     private Integer stockQuantity;
 
     @NotNull
+    @Positive
     private Float weight;
 }

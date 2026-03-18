@@ -1,9 +1,7 @@
 package com.santiGalarza.order_management.product;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,8 +42,14 @@ public class Product {
     private LocalDateTime updatedAt;
 
     private boolean isActive;
+
+    @Positive
     private int minOrderQuantity;
+
+    @PositiveOrZero
     private int stockQuantity;
+
+    @Positive
     private float weight;
 
     protected Product(){}
