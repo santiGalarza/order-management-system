@@ -31,12 +31,14 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
         Product product = productMapper.productRequestDTOtoProduct(productRequestDto);
         Product savedProduct = productRepository.save(product);
         return productMapper.toProductResponseDto(savedProduct);
     }
 
+    @Transactional
     public ProductResponseDto fullUpdateProduct(UUID id, ProductRequestDto productRequestDto) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
@@ -45,6 +47,7 @@ public class ProductService {
         return productMapper.toProductResponseDto(productRepository.save(product));
     }
 
+    @Transactional
     public ProductResponseDto partialUpdateProduct(UUID id, ProductPatchRequestDto productPatchRequestDto) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
@@ -53,6 +56,7 @@ public class ProductService {
         return productMapper.toProductResponseDto(productRepository.save(product));
     }
 
+    @Transactional
     public void deleteProduct(UUID id) {
         if(!productRepository.existsById(id)) {
             throw new ProductNotFoundException(id);
