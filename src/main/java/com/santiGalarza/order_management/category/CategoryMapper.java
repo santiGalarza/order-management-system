@@ -1,8 +1,6 @@
 package com.santiGalarza.order_management.category;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
 import java.util.UUID;
 
@@ -13,12 +11,10 @@ public interface CategoryMapper {
 
     CategoryResponseDto toCategoryResponseDto(Category category);
 
-    @Named("uuidToCategory")
-    default Category uuidToCategory(UUID id) {
-        if(id == null) return null;
-        Category parent = new Category();
-        parent.setId(id);
-        return parent;
-    }
+    @Mapping(target = "parentCategory",ignore = true)
+    void updateCategory(CategoryRequestDto categoryRequestDto, @MappingTarget Category category);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "parentCategory", ignore = true)
+    void patchCategory(CategoryPatchRequestDto categoryRequestDto, @MappingTarget Category category);
 }
