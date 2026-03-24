@@ -1,18 +1,16 @@
 package com.santiGalarza.order_management.order;
 
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-import java.util.UUID;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderPatchRequestDto {
-    private UUID orderStatusId;
-    private List<OrderItemPatchRequestDto> items;
+public class OrderItemUpdateRequestDto {
+    @Min(1)
+    private Integer quantity;
 }
