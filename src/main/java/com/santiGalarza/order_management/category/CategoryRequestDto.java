@@ -1,6 +1,7 @@
 package com.santiGalarza.order_management.category;
 
 import jakarta.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

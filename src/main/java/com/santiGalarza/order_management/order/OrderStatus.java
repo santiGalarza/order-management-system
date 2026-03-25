@@ -2,6 +2,7 @@ package com.santiGalarza.order_management.order;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+
 import lombok.*;
 
 import java.util.UUID;

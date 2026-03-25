@@ -2,7 +2,9 @@ package com.santiGalarza.order_management.product;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
 import lombok.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,11 +12,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity
+@Table(name = "products")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "products")
 public class Product {
 
     @Id
