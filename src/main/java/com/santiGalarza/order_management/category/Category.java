@@ -2,8 +2,9 @@ package com.santiGalarza.order_management.category;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Category {
 
@@ -37,8 +38,6 @@ public class Category {
     private LocalDateTime updatedAt;
 
     private boolean isActive;
-
-    protected Category() {}
 
     public boolean isRootCategory() {
         return parentCategory == null;

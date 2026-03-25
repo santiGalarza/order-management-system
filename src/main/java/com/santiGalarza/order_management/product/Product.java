@@ -2,9 +2,7 @@ package com.santiGalarza.order_management.product;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,7 +12,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Product {
 
@@ -51,6 +49,4 @@ public class Product {
 
     @Positive
     private float weight;
-
-    protected Product(){}
 }

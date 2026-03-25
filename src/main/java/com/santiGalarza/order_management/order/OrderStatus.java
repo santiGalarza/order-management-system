@@ -10,7 +10,6 @@ import java.util.UUID;
 @Table(name = "order_status")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderStatus {
 

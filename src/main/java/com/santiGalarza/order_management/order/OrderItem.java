@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "order_items")
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
