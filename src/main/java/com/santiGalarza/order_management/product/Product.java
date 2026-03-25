@@ -36,14 +36,6 @@ public class Product {
     @NotNull
     private String sku;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    private boolean isActive;
-
     @Positive
     private int minOrderQuantity;
 
@@ -52,4 +44,12 @@ public class Product {
 
     @Positive
     private float weight;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    private boolean isActive;
 }

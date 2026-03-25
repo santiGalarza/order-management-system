@@ -30,10 +30,6 @@ public class Category {
 
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_category_id")
-    private Category parentCategory;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -41,6 +37,10 @@ public class Category {
     private LocalDateTime updatedAt;
 
     private boolean isActive;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_category_id")
+    private Category parentCategory;
 
     public boolean isRootCategory() {
         return parentCategory == null;
