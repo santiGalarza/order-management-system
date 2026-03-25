@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class OrderService {
 
     private final OrderMapper orderMapper;
@@ -18,7 +19,6 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    @Transactional(readOnly = true)
     public List<OrderResponseDto> getAllOrders(){
         return orderRepository.findAll()
                 .stream()
@@ -26,7 +26,6 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public OrderResponseDto getOrderById(UUID id){
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 
