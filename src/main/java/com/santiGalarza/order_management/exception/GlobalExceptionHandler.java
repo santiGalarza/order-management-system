@@ -1,6 +1,9 @@
 package com.santiGalarza.order_management.exception;
 
+import com.santiGalarza.order_management.product.InsufficientStockException;
+
 import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -44,6 +47,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGeneric(Exception e) {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ErrorResponseDto> handleInsufficientStock(InsufficientStockException e){
+        return build(HttpStatus.CONFLICT, e.getMessage());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleResourceNotFound(ResourceNotFoundException e){
+        return build(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
     private ResponseEntity<ErrorResponseDto> build(HttpStatus status, String message) {
