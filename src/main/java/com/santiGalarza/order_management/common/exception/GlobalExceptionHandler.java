@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.exception;
+package com.santiGalarza.order_management.common.exception;
 
 import com.santiGalarza.order_management.product.InsufficientStockException;
 
