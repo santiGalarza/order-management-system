@@ -7,6 +7,7 @@ import lombok.*;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -33,10 +34,27 @@ public class Order {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "order_status_id")
-    private OrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.PENDING;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> items;
+    private List<Item> items;
+
+    @Setter(AccessLevel.NONE)
+    private int deliveryAttempts = 0;
+
+    public void updateStatus(Status newStatus, int maxDeliveryAttempts) {
+        this.status.validateTransition(newStatus);
+        if (newStatus == Status.REATTEMPTING_DELIVERY) {
+            incrementDeliveryAttempts(maxDeliveryAttempts);
+        }
+        this.status = newStatus;
+    }
+
+    private void incrementDeliveryAttempts(int maxDeliveryAttempts) {
+        if(deliveryAttempts >= maxDeliveryAttempts) {
+            throw new MaxDeliveryAttemptsExceededException(this.id);
+        }
+        deliveryAttempts++;
+    }
 }

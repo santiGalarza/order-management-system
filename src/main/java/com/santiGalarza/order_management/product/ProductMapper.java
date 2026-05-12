@@ -9,7 +9,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface ProductMapper {
     ProductResponseDto toProductResponseDto(Product product);
     Product productRequestDTOtoProduct(ProductRequestDto productRequestDTO);
-    void updateProductRequestDto(ProductRequestDto productRequestDTO,@MappingTarget Product product);
+    void updateProductRequestDto(ProductUpdateDto productRequestDTO, @MappingTarget Product product);
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void patchProductFromRequestDto(ProductPatchRequestDto productPatchRequestDto, @MappingTarget Product product);
 }

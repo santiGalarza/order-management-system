@@ -1,5 +1,7 @@
 package com.santiGalarza.order_management.common.exception;
 
+import com.santiGalarza.order_management.order.InvalidOrderStatusTransitionException;
+import com.santiGalarza.order_management.order.OrderNotModifiableException;
 import com.santiGalarza.order_management.product.InsufficientStockException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -65,6 +67,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleDataIntegrity(
             DataIntegrityViolationException e, HttpServletRequest request) {
         return build(HttpStatus.CONFLICT, "Data Integrity Violation", "Data integrity violation", request);
+    }
+
+    @ExceptionHandler(InvalidOrderStatusTransitionException.class)
+    public ResponseEntity<ProblemDetail> handleInvalidTransition(
+            InvalidOrderStatusTransitionException e, HttpServletRequest req){
+        return build(HttpStatus.CONFLICT, "Invalid Status Transition", e.getMessage(), req);
+    }
+
+    @ExceptionHandler(OrderNotModifiableException.class)
+    public ResponseEntity<ProblemDetail> handleOrderNotModifiable(
+            OrderNotModifiableException e, HttpServletRequest req){
+        return build(HttpStatus.CONFLICT, "Order Not Modifiable", e.getMessage(), req);
     }
 
     private ResponseEntity<ProblemDetail> build(

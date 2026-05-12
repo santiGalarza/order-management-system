@@ -9,6 +9,6 @@ public record OrderResponseDto(
         UUID id,
         LocalDateTime creationDate,
         BigDecimal totalPrice,
-        OrderStatus orderStatus,
-        List<OrderItemResponseDto> items
+        Status status,
+        List<ItemResponseDto> items
 ) {}

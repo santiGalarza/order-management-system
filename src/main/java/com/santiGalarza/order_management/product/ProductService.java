@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -40,11 +41,11 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDto fullUpdateProduct(UUID id, ProductRequestDto productRequestDto) {
+    public ProductResponseDto fullUpdateProduct(UUID id, ProductUpdateDto dto) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
-        productMapper.updateProductRequestDto(productRequestDto, product);
+        productMapper.updateProductRequestDto(dto, product);
         return productMapper.toProductResponseDto(productRepository.save(product));
     }
 
@@ -59,10 +60,28 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(UUID id) {
-        if(!productRepository.existsById(id)) {
-            throw new ProductNotFoundException(id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+        productRepository.delete(product);
+    }
+
+    public Map<UUID, Product> getProductsByIds(List<UUID> ids) {
+        List<Product> products = productRepository.findAllById(ids);
+
+        List<UUID> missingIds = ids.stream()
+                .filter(id -> products.stream().noneMatch(p -> p.getId().equals(id)))
+                .toList();
+
+        if (!missingIds.isEmpty()) {
+            throw new ProductNotFoundException("Products not found with ids: " + missingIds);
         }
 
-        productRepository.deleteById(id);
+        return products.stream()
+                .collect(Collectors.toMap(Product::getId, p -> p));
+    }
+
+    public Product findProduct(UUID id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 }

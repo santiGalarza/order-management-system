@@ -52,4 +52,22 @@ public class Product {
     private LocalDateTime updatedAt;
 
     private boolean isActive;
+
+    public void deductStock(int quantity) {
+        if (quantity > this.stockQuantity) {
+            throw new InsufficientStockException(this.id, this.stockQuantity);
+        }
+        this.stockQuantity -= quantity;
+
+        /*
+        TODO: implement alerts when stock quantity under threshold
+
+        if (stockQuantity <= threshold){
+        }
+         */
+    }
+
+    public void restoreStock(int quantity) {
+        this.stockQuantity += quantity;
+    }
 }

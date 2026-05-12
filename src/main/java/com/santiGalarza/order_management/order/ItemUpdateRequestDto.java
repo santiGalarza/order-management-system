@@ -6,10 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderItemUpdateRequestDto {
+public class ItemUpdateRequestDto {
+
+    private UUID id;
+
     @Min(1)
     private Integer quantity;
 }

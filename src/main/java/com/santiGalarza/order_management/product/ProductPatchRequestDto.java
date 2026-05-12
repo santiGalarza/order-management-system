@@ -3,7 +3,6 @@ package com.santiGalarza.order_management.product;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,9 +19,6 @@ public class ProductPatchRequestDto {
 
     @Digits(integer = 8, fraction = 2)
     private BigDecimal price;
-
-    @Size(min = 8, max = 12)
-    private String sku;
 
     private Boolean isActive;
 

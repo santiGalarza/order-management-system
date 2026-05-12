@@ -1,7 +1,7 @@
 package com.santiGalarza.order_management.product;
 
 import jakarta.validation.constraints.*;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,18 +11,14 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductRequestDto {
+public class ProductUpdateDto {
 
     @NotEmpty
     private String name;
 
     @NotNull
-    @Digits(integer = 8, fraction = 2)
+    @Digits(integer = 6, fraction = 2)
     private BigDecimal price;
-
-    @NotEmpty
-    @Size(min = 8, max = 12)
-    private String sku;
 
     @NotNull
     private Boolean isActive;

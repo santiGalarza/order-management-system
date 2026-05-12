@@ -8,4 +8,5 @@ public class ProductNotFoundException extends ResourceNotFoundException {
     public ProductNotFoundException(UUID id){
         super("Product with id " + id + " not found");
     }
+    public ProductNotFoundException(String message) {super(message);}
 }

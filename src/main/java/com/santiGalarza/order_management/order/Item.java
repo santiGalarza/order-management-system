@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderItem {
+public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -37,4 +37,14 @@ public class OrderItem {
 
     @Min(1)
     private int quantity;
+
+    public void updateQuantity(int newQuantity) {
+        int delta = newQuantity - this.quantity;
+        if (delta > 0) {
+            this.product.deductStock(delta);
+        } else if (delta < 0) {
+            this.product.restoreStock(-delta);
+        }
+        this.quantity = newQuantity;
+    }
 }

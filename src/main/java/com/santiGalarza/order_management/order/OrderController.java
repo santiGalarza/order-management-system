@@ -34,21 +34,44 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(dto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<OrderResponseDto> updateOrder
-            (@PathVariable UUID id, @RequestBody @Valid OrderUpdateRequestDto dto){
-        return ResponseEntity.ok(orderService.updateOrder(id,dto));
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<OrderResponseDto> patchOrder(
-            @PathVariable UUID id, @RequestBody @Valid OrderUpdateRequestDto dto){
-        return ResponseEntity.ok(orderService.patchOrder(id,dto));
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<OrderResponseDto> updateStatus(
+            @PathVariable UUID id, @RequestBody @Valid UpdateStatusRequest dto){
+        return ResponseEntity.ok(orderService.updateStatus(id,dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<OrderResponseDto> deleteOrder(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteOrder(@PathVariable UUID id) {
         orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/items")
+    public ResponseEntity<List<ItemResponseDto>> getItems(@PathVariable UUID id) {
+        return ResponseEntity.ok(orderService.getAllItems(id));
+    }
+
+    @GetMapping("/{id}/items/{itemId}")
+    public ResponseEntity<ItemResponseDto> getItemById(
+            @PathVariable UUID id, @PathVariable UUID itemId) {
+        return ResponseEntity.ok(orderService.getItemById(id,itemId));
+    }
+
+    @PostMapping("/{id}/items")
+    public ResponseEntity<ItemResponseDto> createItem(
+            @PathVariable UUID id, @RequestBody @Valid ItemRequestDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createItem(id, dto));
+    }
+
+    @PatchMapping("/{id}/items/{itemId}")
+    public ResponseEntity<ItemResponseDto> updateItemQuantity(
+            @PathVariable UUID id, @PathVariable UUID itemId, @RequestBody @Valid ItemUpdateRequestDto dto){
+        return ResponseEntity.ok(orderService.updateItemQuantity(id,itemId,dto));
+    }
+
+    @DeleteMapping("/{id}/items/{itemId}")
+    public ResponseEntity<Void> deleteItem(@PathVariable UUID id, @PathVariable UUID itemId) {
+        orderService.deleteItem(id,itemId);
         return ResponseEntity.noContent().build();
     }
 }
