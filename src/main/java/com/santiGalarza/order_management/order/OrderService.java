@@ -36,42 +36,42 @@ public class OrderService {
 
     // Order Class service methods
 
-    public List<OrderResponseDto> getAllOrders(){
+    public List<OrderResponse> getAllOrders(){
         return orderRepository.findAll()
                 .stream()
                 .map(orderMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public OrderResponseDto getOrderById(UUID id){
+    public OrderResponse getOrderById(UUID id){
         Order order = findOrder(id);
 
         return orderMapper.toResponseDto(order);
     }
 
     @Transactional
-    public OrderResponseDto createOrder(OrderRequestDto dto){
-        List<UUID> productIds = dto.getItems()
+    public OrderResponse createOrder(CreateOrderRequest createOrderRequest){
+        List<UUID> productIds = createOrderRequest.getItems()
                 .stream()
-                .map(ItemRequestDto::getProductId)
+                .map(CreateItemRequest::getProductId)
                 .distinct()
                 .toList();
 
         Map<UUID, Product> productMap = productService.getProductsByIds(productIds);
 
-        for(ItemRequestDto item : dto.getItems()){
+        for(CreateItemRequest item : createOrderRequest.getItems()){
             Product product = productMap.get(item.getProductId());
             product.deductStock(item.getQuantity());
         }
 
-        Order order = orderMapper.toEntity(dto);
+        Order order = orderMapper.toEntity(createOrderRequest);
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
 
     @Transactional
-    public OrderResponseDto updateStatus(UUID id, UpdateStatusRequest dto){
+    public OrderResponse updateStatus(UUID id, UpdateStatusRequest updateStatusRequest){
         Order order = findOrder(id);
-        order.updateStatus(dto.getStatus(),maxDeliveryAttempts);
+        order.updateStatus(updateStatusRequest.getStatus(),maxDeliveryAttempts);
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
 
@@ -83,26 +83,26 @@ public class OrderService {
 
     // Item Class service methods
 
-    public List<ItemResponseDto> getAllItems(UUID id){
+    public List<ItemResponse> getAllItems(UUID id){
         return findOrder(id).getItems()
                 .stream()
                 .map(itemMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public ItemResponseDto getItemById(UUID id, UUID itemId){
+    public ItemResponse getItemById(UUID id, UUID itemId){
         return itemMapper.toResponseDto(findItem(id,itemId));
     }
 
     @Transactional
-    public ItemResponseDto createItem(UUID id, ItemRequestDto dto){
+    public ItemResponse createItem(UUID id, CreateItemRequest createItemRequest){
         Order order = findOrder(id);
         validateOrderIsModifiable(order);
 
-        Product product = productService.findProduct(dto.getProductId());
-        product.deductStock(dto.getQuantity());
+        Product product = productService.findProduct(createItemRequest.getProductId());
+        product.deductStock(createItemRequest.getQuantity());
 
-        Item item = itemMapper.toEntity(dto);
+        Item item = itemMapper.toEntity(createItemRequest);
         item.setOrder(order);
         item.setProduct(product);
         order.getItems().add(item);
@@ -111,11 +111,11 @@ public class OrderService {
     }
 
     @Transactional
-    public ItemResponseDto updateItemQuantity(UUID id, UUID itemId, ItemUpdateRequestDto dto){
+    public ItemResponse updateItemQuantity(UUID id, UUID itemId, PatchItemRequest patchItemRequest){
         validateOrderIsModifiable(findOrder(id));
 
         Item item = findItem(id,itemId);
-        item.updateQuantity(dto.getQuantity());
+        item.updateQuantity(patchItemRequest.getQuantity());
         return itemMapper.toResponseDto(itemRepository.save(item));
     }
 

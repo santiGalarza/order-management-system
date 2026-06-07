@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductUpdateDto {
+public class UpdateProductRequest {
 
     @NotEmpty
     private String name;

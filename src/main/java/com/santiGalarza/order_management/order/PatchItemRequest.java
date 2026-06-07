@@ -11,9 +11,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ItemRequestDto {
+public class PatchItemRequest {
 
-    private UUID productId;
+    private UUID id;
 
     @Min(1)
     private Integer quantity;

@@ -20,42 +20,42 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public ProductResponseDto getProductById(UUID id) {
+    public ProductResponse getProductById(UUID id) {
         Product product = productRepository.findById(id).
                 orElseThrow(() -> new ProductNotFoundException(id));
-        return productMapper.toProductResponseDto(product);
+        return productMapper.toProductResponse(product);
     }
 
-    public List<ProductResponseDto> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         return productRepository.findAll()
                 .stream()
-                .map(productMapper::toProductResponseDto)
+                .map(productMapper::toProductResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
-        Product product = productMapper.productRequestDTOtoProduct(productRequestDto);
+    public ProductResponse createProduct(CreateProductRequest createProductRequest) {
+        Product product = productMapper.createProductRequestToProduct(createProductRequest);
         Product savedProduct = productRepository.save(product);
-        return productMapper.toProductResponseDto(savedProduct);
+        return productMapper.toProductResponse(savedProduct);
     }
 
     @Transactional
-    public ProductResponseDto fullUpdateProduct(UUID id, ProductUpdateDto dto) {
+    public ProductResponse fullUpdateProduct(UUID id, UpdateProductRequest updateProductRequest) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
-        productMapper.updateProductRequestDto(dto, product);
-        return productMapper.toProductResponseDto(productRepository.save(product));
+        productMapper.updateProductFromRequest(updateProductRequest, product);
+        return productMapper.toProductResponse(productRepository.save(product));
     }
 
     @Transactional
-    public ProductResponseDto partialUpdateProduct(UUID id, ProductPatchRequestDto productPatchRequestDto) {
+    public ProductResponse partialUpdateProduct(UUID id, PatchProductRequest patchProductRequest) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
-        productMapper.patchProductFromRequestDto(productPatchRequestDto, product);
-        return productMapper.toProductResponseDto(productRepository.save(product));
+        productMapper.patchProductFromRequest(patchProductRequest, product);
+        return productMapper.toProductResponse(productRepository.save(product));
     }
 
     @Transactional

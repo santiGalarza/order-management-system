@@ -20,24 +20,24 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable UUID id) {
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable UUID id) {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody @Valid OrderRequestDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(dto));
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid CreateOrderRequest createOrderRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(createOrderRequest));
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<OrderResponseDto> updateStatus(
-            @PathVariable UUID id, @RequestBody @Valid UpdateStatusRequest dto){
-        return ResponseEntity.ok(orderService.updateStatus(id,dto));
+    public ResponseEntity<OrderResponse> updateStatus(
+            @PathVariable UUID id, @RequestBody @Valid UpdateStatusRequest updateStatusRequest){
+        return ResponseEntity.ok(orderService.updateStatus(id,updateStatusRequest));
     }
 
     @DeleteMapping("/{id}")
@@ -47,26 +47,26 @@ public class OrderController {
     }
 
     @GetMapping("/{id}/items")
-    public ResponseEntity<List<ItemResponseDto>> getItems(@PathVariable UUID id) {
+    public ResponseEntity<List<ItemResponse>> getItems(@PathVariable UUID id) {
         return ResponseEntity.ok(orderService.getAllItems(id));
     }
 
     @GetMapping("/{id}/items/{itemId}")
-    public ResponseEntity<ItemResponseDto> getItemById(
+    public ResponseEntity<ItemResponse> getItemById(
             @PathVariable UUID id, @PathVariable UUID itemId) {
         return ResponseEntity.ok(orderService.getItemById(id,itemId));
     }
 
     @PostMapping("/{id}/items")
-    public ResponseEntity<ItemResponseDto> createItem(
-            @PathVariable UUID id, @RequestBody @Valid ItemRequestDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createItem(id, dto));
+    public ResponseEntity<ItemResponse> createItem(
+            @PathVariable UUID id, @RequestBody @Valid CreateItemRequest createItemRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createItem(id, createItemRequest));
     }
 
     @PatchMapping("/{id}/items/{itemId}")
-    public ResponseEntity<ItemResponseDto> updateItemQuantity(
-            @PathVariable UUID id, @PathVariable UUID itemId, @RequestBody @Valid ItemUpdateRequestDto dto){
-        return ResponseEntity.ok(orderService.updateItemQuantity(id,itemId,dto));
+    public ResponseEntity<ItemResponse> updateItemQuantity(
+            @PathVariable UUID id, @PathVariable UUID itemId, @RequestBody @Valid PatchItemRequest patchItemRequest){
+        return ResponseEntity.ok(orderService.updateItemQuantity(id,itemId,patchItemRequest));
     }
 
     @DeleteMapping("/{id}/items/{itemId}")

@@ -1,6 +1,8 @@
 package com.santiGalarza.order_management.product;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,31 +13,21 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductRequestDto {
+public class PatchProductRequest {
 
-    @NotEmpty
     private String name;
 
-    @NotNull
     @Digits(integer = 8, fraction = 2)
     private BigDecimal price;
 
-    @NotEmpty
-    @Size(min = 8, max = 12)
-    private String sku;
-
-    @NotNull
     private Boolean isActive;
 
-    @NotNull
     @Positive
     private Integer minOrderQuantity;
 
-    @NotNull
     @PositiveOrZero
     private Integer stockQuantity;
 
-    @NotNull
     @Positive
     private Float weight;
 }
