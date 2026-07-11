@@ -1,11 +1,6 @@
 package com.santiGalarza.order_management.common.exception;
 
-import com.santiGalarza.order_management.order.InvalidOrderStatusTransitionException;
-import com.santiGalarza.order_management.order.OrderNotModifiableException;
-import com.santiGalarza.order_management.product.InsufficientStockException;
-
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;

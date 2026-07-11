@@ -2,8 +2,6 @@ package com.santiGalarza.order_management.category;
 
 import org.mapstruct.*;
 
-import java.util.UUID;
-
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
     @Mapping(target = "parentCategory",source = "parentCategoryId",qualifiedByName = "uuidToCategory")
