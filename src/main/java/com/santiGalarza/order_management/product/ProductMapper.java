@@ -7,9 +7,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    ProductResponseDto toProductResponseDto(Product product);
-    Product productRequestDTOtoProduct(ProductRequestDto productRequestDTO);
-    void updateProductRequestDto(ProductUpdateDto productRequestDTO, @MappingTarget Product product);
+    ProductResponse toProductResponse(Product product);
+    Product createProductRequestToProduct(CreateProductRequest createProductRequest);
+    void updateProductFromRequest(UpdateProductRequest updateProductRequest, @MappingTarget Product product);
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patchProductFromRequestDto(ProductPatchRequestDto productPatchRequestDto, @MappingTarget Product product);
+    void patchProductFromRequest(PatchProductRequest patchProductRequest, @MappingTarget Product product);
 }

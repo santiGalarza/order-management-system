@@ -1,11 +1,6 @@
 package com.santiGalarza.order_management.common.exception;
 
-import com.santiGalarza.order_management.order.InvalidOrderStatusTransitionException;
-import com.santiGalarza.order_management.order.OrderNotModifiableException;
-import com.santiGalarza.order_management.product.InsufficientStockException;
-
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -51,34 +46,16 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error","An unexpected error occurred",req);
     }
 
-    @ExceptionHandler(InsufficientStockException.class)
-    public ResponseEntity<ProblemDetail> handleInsufficientStock(
-            InsufficientStockException e, HttpServletRequest req) {
-        return build(HttpStatus.CONFLICT, "Insufficient Stock", e.getMessage(), req);
-    }
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleResourceNotFound(
             ResourceNotFoundException e, HttpServletRequest req){
         return build(HttpStatus.NOT_FOUND, "Resource Not Found", e.getMessage(), req);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ProblemDetail> handleDataIntegrity(
-            DataIntegrityViolationException e, HttpServletRequest request) {
-        return build(HttpStatus.CONFLICT, "Data Integrity Violation", "Data integrity violation", request);
-    }
-
-    @ExceptionHandler(InvalidOrderStatusTransitionException.class)
-    public ResponseEntity<ProblemDetail> handleInvalidTransition(
-            InvalidOrderStatusTransitionException e, HttpServletRequest req){
-        return build(HttpStatus.CONFLICT, "Invalid Status Transition", e.getMessage(), req);
-    }
-
-    @ExceptionHandler(OrderNotModifiableException.class)
-    public ResponseEntity<ProblemDetail> handleOrderNotModifiable(
-            OrderNotModifiableException e, HttpServletRequest req){
-        return build(HttpStatus.CONFLICT, "Order Not Modifiable", e.getMessage(), req);
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ProblemDetail> handleConflict(
+            ConflictException e, HttpServletRequest req){
+        return build(HttpStatus.CONFLICT, e.getTitle(), e.getMessage(), req);
     }
 
     private ResponseEntity<ProblemDetail> build(

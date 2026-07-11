@@ -25,50 +25,50 @@ public class CategoryService {
                 .orElseThrow(() -> new CategoryNotFoundException(parentCategoryId));
     }
 
-    public List<CategoryResponseDto> getAllCategories() {
+    public List<CategoryResponse> getCategories() {
         return categoryRepository.findAll()
                 .stream()
-                .map(categoryMapper::toCategoryResponseDto)
+                .map(categoryMapper::toCategoryResponse)
                 .collect(Collectors.toList());
     }
 
-    public CategoryResponseDto getCategoryById(UUID id) {
+    public CategoryResponse getCategory(UUID id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
-        return categoryMapper.toCategoryResponseDto(category);
+        return categoryMapper.toCategoryResponse(category);
     }
 
     @Transactional
-    public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
-        Category category = categoryMapper.toEntity(categoryRequestDto);
-        category.setParentCategory(resolveParent(categoryRequestDto.getParentCategoryId()));
+    public CategoryResponse createCategory(CreateCategoryRequest createCategoryRequest) {
+        Category category = categoryMapper.toEntity(createCategoryRequest);
+        category.setParentCategory(resolveParent(createCategoryRequest.getParentCategoryId()));
 
-        return categoryMapper.toCategoryResponseDto(categoryRepository.save(category));
+        return categoryMapper.toCategoryResponse(categoryRepository.save(category));
     }
 
     @Transactional
-    public CategoryResponseDto fullyUpdateCategory(UUID id, CategoryRequestDto categoryRequestDto) {
+    public CategoryResponse replaceCategory(UUID id, UpdateCategoryRequest updateCategoryRequest) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
-        categoryMapper.updateCategory(categoryRequestDto, category);
-        category.setParentCategory(resolveParent(categoryRequestDto.getParentCategoryId()));
+        categoryMapper.updateCategory(updateCategoryRequest, category);
+        category.setParentCategory(resolveParent(updateCategoryRequest.getParentCategoryId()));
 
-        return categoryMapper.toCategoryResponseDto(categoryRepository.save(category));
+        return categoryMapper.toCategoryResponse(categoryRepository.save(category));
     }
 
     @Transactional
-    public CategoryResponseDto partialUpdateCategory(UUID id, CategoryPatchRequestDto categoryPatchRequestDto) {
+    public CategoryResponse updateCategory(UUID id, PatchCategoryRequest patchCategoryRequest) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
-        categoryMapper.patchCategory(categoryPatchRequestDto, category);
-        if (categoryPatchRequestDto.getParentCategoryId() != null) {
-            category.setParentCategory(resolveParent(categoryPatchRequestDto.getParentCategoryId()));
+        categoryMapper.patchCategory(patchCategoryRequest, category);
+        if (patchCategoryRequest.getParentCategoryId() != null) {
+            category.setParentCategory(resolveParent(patchCategoryRequest.getParentCategoryId()));
         }
 
-        return categoryMapper.toCategoryResponseDto(categoryRepository.save(category));
+        return categoryMapper.toCategoryResponse(categoryRepository.save(category));
     }
 
     @Transactional

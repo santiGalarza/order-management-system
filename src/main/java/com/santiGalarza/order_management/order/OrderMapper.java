@@ -5,8 +5,8 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = ItemMapper.class)
 public interface OrderMapper {
 
-    Order toEntity(OrderRequestDto dto);
-    OrderResponseDto toResponseDto(Order order);
+    Order toEntity(CreateOrderRequest createOrderRequest);
+    OrderResponse toResponseDto(Order order);
 
 
 }

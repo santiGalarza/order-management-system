@@ -11,9 +11,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ItemUpdateRequestDto {
+public class CreateItemRequest {
 
-    private UUID id;
+    private UUID productId;
 
     @Min(1)
     private Integer quantity;

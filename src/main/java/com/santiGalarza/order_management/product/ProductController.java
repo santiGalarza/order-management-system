@@ -20,32 +20,32 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable UUID id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable UUID id) {
+        return ResponseEntity.ok(productService.getProduct(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponse>> getProducts() {
+        return ResponseEntity.ok(productService.getProducts());
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponseDto> createProduct
-            (@RequestBody @Valid ProductRequestDto productRequestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productRequestDto));
+    public ResponseEntity<ProductResponse> createProduct
+            (@RequestBody @Valid CreateProductRequest createProductRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(createProductRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> fullUpdateProduct
-            (@PathVariable UUID id, @RequestBody @Valid ProductUpdateDto dto) {
-        return ResponseEntity.ok(productService.fullUpdateProduct(id, dto));
+    public ResponseEntity<ProductResponse> replaceProduct
+            (@PathVariable UUID id, @RequestBody @Valid UpdateProductRequest updateProductRequest) {
+        return ResponseEntity.ok(productService.replaceProduct(id, updateProductRequest));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> partialUpdateProduct
-            (@PathVariable UUID id, @RequestBody @Valid ProductPatchRequestDto productPatchRequestDto) {
-        return ResponseEntity.ok(productService.partialUpdateProduct
-                (id,productPatchRequestDto));
+    public ResponseEntity<ProductResponse> updateProduct
+            (@PathVariable UUID id, @RequestBody @Valid PatchProductRequest patchProductRequest) {
+        return ResponseEntity.ok(productService.updateProduct
+                (id,patchProductRequest));
     }
 
     @DeleteMapping("/{id}")

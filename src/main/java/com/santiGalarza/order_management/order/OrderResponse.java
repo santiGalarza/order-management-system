@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public record OrderResponseDto(
+public record OrderResponse(
         UUID id,
         LocalDateTime creationDate,
         BigDecimal totalPrice,
         Status status,
-        List<ItemResponseDto> items
+        List<ItemResponse> items
 ) {}

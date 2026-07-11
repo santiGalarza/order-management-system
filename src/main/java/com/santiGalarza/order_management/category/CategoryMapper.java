@@ -2,19 +2,17 @@ package com.santiGalarza.order_management.category;
 
 import org.mapstruct.*;
 
-import java.util.UUID;
-
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
     @Mapping(target = "parentCategory",source = "parentCategoryId",qualifiedByName = "uuidToCategory")
-    Category toEntity(CategoryRequestDto categoryRequestDto);
+    Category toEntity(CreateCategoryRequest createCategoryRequest);
 
-    CategoryResponseDto toCategoryResponseDto(Category category);
+    CategoryResponse toCategoryResponse(Category category);
 
     @Mapping(target = "parentCategory",ignore = true)
-    void updateCategory(CategoryRequestDto categoryRequestDto, @MappingTarget Category category);
+    void updateCategory(UpdateCategoryRequest updateCategoryRequest, @MappingTarget Category category);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "parentCategory", ignore = true)
-    void patchCategory(CategoryPatchRequestDto categoryRequestDto, @MappingTarget Category category);
+    void patchCategory(PatchCategoryRequest patchCategoryRequest, @MappingTarget Category category);
 }

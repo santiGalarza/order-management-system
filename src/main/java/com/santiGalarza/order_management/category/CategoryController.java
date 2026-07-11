@@ -20,37 +20,37 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponseDto> getCategory(@PathVariable UUID id) {
-        return ResponseEntity.ok(categoryService.getCategoryById(id));
+    public ResponseEntity<CategoryResponse> getCategory(@PathVariable UUID id) {
+        return ResponseEntity.ok(categoryService.getCategory(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponseDto>> getAllCategories(){
-        return ResponseEntity.ok(categoryService.getAllCategories());
+    public ResponseEntity<List<CategoryResponse>> getCategories(){
+        return ResponseEntity.ok(categoryService.getCategories());
     }
 
     @PostMapping
-    public ResponseEntity<CategoryResponseDto> createCategory(
-            @RequestBody @Valid  CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<CategoryResponse> createCategory(
+            @RequestBody @Valid CreateCategoryRequest createCategoryRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                categoryService.createCategory(categoryRequestDto));
+                categoryService.createCategory(createCategoryRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponseDto> fullyUpdateCategory(
-            @PathVariable UUID id, @RequestBody @Valid CategoryRequestDto categoryRequestDto){
-        return ResponseEntity.ok(categoryService.fullyUpdateCategory(id, categoryRequestDto));
+    public ResponseEntity<CategoryResponse> replaceCategory(
+            @PathVariable UUID id, @RequestBody @Valid UpdateCategoryRequest updateCategoryRequest){
+        return ResponseEntity.ok(categoryService.replaceCategory(id, updateCategoryRequest));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<CategoryResponseDto> partialUpdateCategory(
-            @PathVariable UUID id, @RequestBody @Valid CategoryPatchRequestDto categoryPatchRequestDto){
-        return ResponseEntity.ok(categoryService.partialUpdateCategory
-                (id,categoryPatchRequestDto));
+    public ResponseEntity<CategoryResponse> updateCategory(
+            @PathVariable UUID id, @RequestBody @Valid PatchCategoryRequest patchCategoryRequest){
+        return ResponseEntity.ok(categoryService.updateCategory
+                (id,patchCategoryRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CategoryResponseDto> deleteCategory(@PathVariable UUID id) {
+    public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable UUID id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

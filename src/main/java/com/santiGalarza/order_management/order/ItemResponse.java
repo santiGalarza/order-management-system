@@ -3,7 +3,7 @@ package com.santiGalarza.order_management.order;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record ItemResponseDto(
+public record ItemResponse(
         UUID id,
         UUID productId,
         String productName,

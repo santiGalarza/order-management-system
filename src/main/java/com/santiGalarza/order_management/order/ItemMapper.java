@@ -4,6 +4,6 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface ItemMapper {
-    ItemResponseDto toResponseDto(Item item);
-    Item toEntity(ItemRequestDto dto);
+    ItemResponse toResponseDto(Item item);
+    Item toEntity(CreateItemRequest createItemRequest);
 }
