@@ -19,7 +19,7 @@ import java.net.URI;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-public classGlobalExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleValidationException(
@@ -51,34 +51,16 @@ public classGlobalExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error","An unexpected error occurred",req);
     }
 
-    @ExceptionHandler(InsufficientStockException.class)
-    public ResponseEntity<ProblemDetail> handleInsufficientStock(
-            InsufficientStockException e, HttpServletRequest req) {
-        return build(HttpStatus.CONFLICT, "Insufficient Stock", e.getMessage(), req);
-    }
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleResourceNotFound(
             ResourceNotFoundException e, HttpServletRequest req){
         return build(HttpStatus.NOT_FOUND, "Resource Not Found", e.getMessage(), req);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ProblemDetail> handleDataIntegrity(
-            DataIntegrityViolationException e, HttpServletRequest request) {
-        return build(HttpStatus.CONFLICT, "Data Integrity Violation", "Data integrity violation", request);
-    }
-
-    @ExceptionHandler(InvalidOrderStatusTransitionException.class)
-    public ResponseEntity<ProblemDetail> handleInvalidTransition(
-            InvalidOrderStatusTransitionException e, HttpServletRequest req){
-        return build(HttpStatus.CONFLICT, "Invalid Status Transition", e.getMessage(), req);
-    }
-
-    @ExceptionHandler(OrderNotModifiableException.class)
-    public ResponseEntity<ProblemDetail> handleOrderNotModifiable(
-            OrderNotModifiableException e, HttpServletRequest req){
-        return build(HttpStatus.CONFLICT, "Order Not Modifiable", e.getMessage(), req);
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ProblemDetail> handleConflict(
+            ConflictException e, HttpServletRequest req){
+        return build(HttpStatus.CONFLICT, e.getTitle(), e.getMessage(), req);
     }
 
     private ResponseEntity<ProblemDetail> build(
