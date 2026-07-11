@@ -1,6 +1,6 @@
 package com.santiGalarza.order_management.category;
 
-import com.santiGalarza.order_management.exception.ResourceNotFoundException;
+import com.santiGalarza.order_management.common.exception.ResourceNotFoundException;
 
 import java.util.UUID;
 

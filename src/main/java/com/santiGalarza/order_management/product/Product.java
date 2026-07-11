@@ -55,7 +55,7 @@ public class Product {
 
     public void deductStock(int quantity) {
         if (quantity > this.stockQuantity) {
-            throw new InsufficientStockException(this.id, this.stockQuantity);
+            throw new InsufficientStockException(this.id);
         }
         this.stockQuantity -= quantity;
 
