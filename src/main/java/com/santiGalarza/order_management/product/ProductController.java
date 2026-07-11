@@ -31,21 +31,20 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct
-            (@RequestBody @Valid CreateProductRequest createProductRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(createProductRequest));
+            (@RequestBody @Valid CreateProductRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(request));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> replaceProduct
-            (@PathVariable UUID id, @RequestBody @Valid UpdateProductRequest updateProductRequest) {
-        return ResponseEntity.ok(productService.replaceProduct(id, updateProductRequest));
+            (@PathVariable UUID id, @RequestBody @Valid UpdateProductRequest request) {
+        return ResponseEntity.ok(productService.replaceProduct(id, request));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct
-            (@PathVariable UUID id, @RequestBody @Valid PatchProductRequest patchProductRequest) {
-        return ResponseEntity.ok(productService.updateProduct
-                (id,patchProductRequest));
+            (@PathVariable UUID id, @RequestBody @Valid PatchProductRequest request) {
+        return ResponseEntity.ok(productService.updateProduct(id,request));
     }
 
     @DeleteMapping("/{id}")

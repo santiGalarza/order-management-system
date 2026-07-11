@@ -34,14 +34,14 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid CreateOrderRequest createOrderRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(createOrderRequest));
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid CreateOrderRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(request));
     }
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<OrderResponse> updateStatus(
-            @PathVariable UUID id, @RequestBody @Valid UpdateStatusRequest updateStatusRequest){
-        return ResponseEntity.ok(orderService.updateStatus(id,updateStatusRequest));
+            @PathVariable UUID id, @RequestBody @Valid UpdateStatusRequest request){
+        return ResponseEntity.ok(orderService.updateStatus(id,request));
     }
 
     @DeleteMapping("/{id}")
@@ -63,14 +63,14 @@ public class OrderController {
 
     @PostMapping("/{id}/items")
     public ResponseEntity<ItemResponse> createItem(
-            @PathVariable UUID id, @RequestBody @Valid CreateItemRequest createItemRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createItem(id, createItemRequest));
+            @PathVariable UUID id, @RequestBody @Valid CreateItemRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createItem(id, request));
     }
 
     @PatchMapping("/{id}/items/{itemId}")
     public ResponseEntity<ItemResponse> updateItemQuantity(
-            @PathVariable UUID id, @PathVariable UUID itemId, @RequestBody @Valid PatchItemRequest patchItemRequest){
-        return ResponseEntity.ok(orderService.updateItemQuantity(id,itemId,patchItemRequest));
+            @PathVariable UUID id, @PathVariable UUID itemId, @RequestBody @Valid PatchItemRequest request){
+        return ResponseEntity.ok(orderService.updateItemQuantity(id,itemId,request));
     }
 
     @DeleteMapping("/{id}/items/{itemId}")

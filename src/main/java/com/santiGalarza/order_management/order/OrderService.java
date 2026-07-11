@@ -55,8 +55,8 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse createOrder(CreateOrderRequest createOrderRequest){
-        List<UUID> productIds = createOrderRequest.getItems()
+    public OrderResponse createOrder(CreateOrderRequest request){
+        List<UUID> productIds = request.getItems()
                 .stream()
                 .map(CreateItemRequest::getProductId)
                 .distinct()
@@ -64,21 +64,21 @@ public class OrderService {
 
         Map<UUID, Product> productMap = productService.getProductsByIds(productIds);
 
-        for(CreateItemRequest item : createOrderRequest.getItems()){
+        for(CreateItemRequest item : request.getItems()){
             Product product = productMap.get(item.getProductId());
             product.deductStock(item.getQuantity());
         }
 
-        Order order = orderMapper.toEntity(createOrderRequest);
+        Order order = orderMapper.toEntity(request);
         order.setCurrentStatus(orderStatusService.getInitialStatus());
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
 
     @Transactional
-    public OrderResponse updateStatus(UUID id, UpdateStatusRequest updateStatusRequest){
+    public OrderResponse updateStatus(UUID id, UpdateStatusRequest request){
         Order order = findOrder(id);
         // changedBy will be replaced with actual auth principal once auth is in
-        orderStatusService.transition(order, updateStatusRequest.getStatusCode(), null, updateStatusRequest.getNotes());
+        orderStatusService.transition(order, request.getStatusCode(), null, request.getNotes());
 
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
@@ -103,14 +103,14 @@ public class OrderService {
     }
 
     @Transactional
-    public ItemResponse createItem(UUID id, CreateItemRequest createItemRequest){
+    public ItemResponse createItem(UUID id, CreateItemRequest request){
         Order order = findOrder(id);
         validateOrderIsModifiable(order);
 
-        Product product = productService.findProduct(createItemRequest.getProductId());
-        product.deductStock(createItemRequest.getQuantity());
+        Product product = productService.findProduct(request.getProductId());
+        product.deductStock(request.getQuantity());
 
-        Item item = itemMapper.toEntity(createItemRequest);
+        Item item = itemMapper.toEntity(request);
         item.setOrder(order);
         item.setProduct(product);
         order.getItems().add(item);
@@ -119,11 +119,11 @@ public class OrderService {
     }
 
     @Transactional
-    public ItemResponse updateItemQuantity(UUID id, UUID itemId, PatchItemRequest patchItemRequest){
+    public ItemResponse updateItemQuantity(UUID id, UUID itemId, PatchItemRequest request){
         validateOrderIsModifiable(findOrder(id));
 
         Item item = findItem(id,itemId);
-        item.updateQuantity(patchItemRequest.getQuantity());
+        item.updateQuantity(request.getQuantity());
         return itemMapper.toResponseDto(itemRepository.save(item));
     }
 
