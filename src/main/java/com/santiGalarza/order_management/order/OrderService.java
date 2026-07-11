@@ -1,5 +1,8 @@
 package com.santiGalarza.order_management.order;
 
+import com.santiGalarza.order_management.order.item.*;
+import com.santiGalarza.order_management.order.status.OrderStatusService;
+import com.santiGalarza.order_management.order.status.UpdateStatusRequest;
 import com.santiGalarza.order_management.product.Product;
 import com.santiGalarza.order_management.product.ProductService;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,18 +23,20 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
     private final ProductService productService;
+    private final OrderStatusService orderStatusService;
 
     @Value("${order.delivery.max-attempts}")
     private int maxDeliveryAttempts;
 
     public OrderService(
             OrderMapper orderMapper, OrderRepository orderRepository,
-            ProductService productService, ItemRepository itemRepository, ItemMapper itemMapper) {
+            ProductService productService, ItemRepository itemRepository, ItemMapper itemMapper, OrderStatusService orderStatusService) {
         this.orderMapper = orderMapper;
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
         this.itemMapper = itemMapper;
         this.productService = productService;
+        this.orderStatusService = orderStatusService;
     }
 
     // Order Class service methods
@@ -65,13 +70,16 @@ public class OrderService {
         }
 
         Order order = orderMapper.toEntity(createOrderRequest);
+        order.setCurrentStatus(orderStatusService.getInitialStatus());
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
 
     @Transactional
     public OrderResponse updateStatus(UUID id, UpdateStatusRequest updateStatusRequest){
         Order order = findOrder(id);
-        order.updateStatus(updateStatusRequest.getStatus(),maxDeliveryAttempts);
+        // changedBy will be replaced with actual auth principal once auth is in
+        orderStatusService.transition(order, updateStatusRequest.getStatusCode(), null, updateStatusRequest.getNotes());
+
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
 
@@ -138,8 +146,8 @@ public class OrderService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
-    private void validateOrderIsModifiable(Order order){
-        if (!order.getStatus().isModifiable()) {
+    private void validateOrderIsModifiable(Order order) {
+        if (!order.getCurrentStatus().isModifiable()) {
             throw new OrderNotModifiableException(order.getId());
         }
     }

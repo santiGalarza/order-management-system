@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.order;
+package com.santiGalarza.order_management.order.item;
 
 import org.mapstruct.Mapper;
 

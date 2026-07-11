@@ -1,5 +1,8 @@
 package com.santiGalarza.order_management.order;
 
+import com.santiGalarza.order_management.order.item.Item;
+import com.santiGalarza.order_management.order.status.OrderStatus;
+import com.santiGalarza.order_management.order.status.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 
@@ -33,27 +36,16 @@ public class Order {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Enumerated(EnumType.STRING)
-    private Status status = Status.PENDING;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "current_status_id")
+    private OrderStatus currentStatus;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items;
 
-    @Setter(AccessLevel.NONE)
     private int deliveryAttempts = 0;
 
-    public void updateStatus(Status newStatus, int maxDeliveryAttempts) {
-        this.status.validateTransition(newStatus);
-        if (newStatus == Status.REATTEMPTING_DELIVERY) {
-            incrementDeliveryAttempts(maxDeliveryAttempts);
-        }
-        this.status = newStatus;
-    }
-
-    private void incrementDeliveryAttempts(int maxDeliveryAttempts) {
-        if(deliveryAttempts >= maxDeliveryAttempts) {
-            throw new MaxDeliveryAttemptsExceededException(this.id);
-        }
-        deliveryAttempts++;
+    public void incrementDeliveryAttempts() {
+        this.deliveryAttempts++;
     }
 }

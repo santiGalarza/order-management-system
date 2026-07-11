@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.order;
+package com.santiGalarza.order_management.order.status;
 
 import java.util.Set;
 

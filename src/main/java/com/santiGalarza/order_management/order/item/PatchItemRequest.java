@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.order;
+package com.santiGalarza.order_management.order.item;
 
 import jakarta.validation.constraints.Min;
 
@@ -11,9 +11,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreateItemRequest {
+public class PatchItemRequest {
 
-    private UUID productId;
+    private UUID id;
 
     @Min(1)
     private Integer quantity;

@@ -1,5 +1,9 @@
 package com.santiGalarza.order_management.order;
 
+import com.santiGalarza.order_management.order.item.CreateItemRequest;
+import com.santiGalarza.order_management.order.item.ItemResponse;
+import com.santiGalarza.order_management.order.item.PatchItemRequest;
+import com.santiGalarza.order_management.order.status.UpdateStatusRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;

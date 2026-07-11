@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.order;
+package com.santiGalarza.order_management.order.item;
 
 import java.math.BigDecimal;
 import java.util.UUID;
