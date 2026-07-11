@@ -20,13 +20,13 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    public ResponseEntity<List<OrderResponse>> getOrders() {
+        return ResponseEntity.ok(orderService.getOrders());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrderById(@PathVariable UUID id) {
-        return ResponseEntity.ok(orderService.getOrderById(id));
+    public ResponseEntity<OrderResponse> getOrder(@PathVariable UUID id) {
+        return ResponseEntity.ok(orderService.getOrder(id));
     }
 
     @PostMapping
@@ -48,13 +48,13 @@ public class OrderController {
 
     @GetMapping("/{id}/items")
     public ResponseEntity<List<ItemResponse>> getItems(@PathVariable UUID id) {
-        return ResponseEntity.ok(orderService.getAllItems(id));
+        return ResponseEntity.ok(orderService.getItems(id));
     }
 
     @GetMapping("/{id}/items/{itemId}")
-    public ResponseEntity<ItemResponse> getItemById(
+    public ResponseEntity<ItemResponse> getItem(
             @PathVariable UUID id, @PathVariable UUID itemId) {
-        return ResponseEntity.ok(orderService.getItemById(id,itemId));
+        return ResponseEntity.ok(orderService.getItem(id,itemId));
     }
 
     @PostMapping("/{id}/items")

@@ -36,14 +36,14 @@ public class OrderService {
 
     // Order Class service methods
 
-    public List<OrderResponse> getAllOrders(){
+    public List<OrderResponse> getOrders(){
         return orderRepository.findAll()
                 .stream()
                 .map(orderMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public OrderResponse getOrderById(UUID id){
+    public OrderResponse getOrder(UUID id){
         Order order = findOrder(id);
 
         return orderMapper.toResponseDto(order);
@@ -83,14 +83,14 @@ public class OrderService {
 
     // Item Class service methods
 
-    public List<ItemResponse> getAllItems(UUID id){
+    public List<ItemResponse> getItems(UUID id){
         return findOrder(id).getItems()
                 .stream()
                 .map(itemMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public ItemResponse getItemById(UUID id, UUID itemId){
+    public ItemResponse getItem(UUID id, UUID itemId){
         return itemMapper.toResponseDto(findItem(id,itemId));
     }
 

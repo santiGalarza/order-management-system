@@ -21,12 +21,12 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProduct(@PathVariable UUID id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        return ResponseEntity.ok(productService.getProduct(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponse>> getProducts() {
+        return ResponseEntity.ok(productService.getProducts());
     }
 
     @PostMapping
@@ -36,15 +36,15 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> fullUpdateProduct
+    public ResponseEntity<ProductResponse> replaceProduct
             (@PathVariable UUID id, @RequestBody @Valid UpdateProductRequest updateProductRequest) {
-        return ResponseEntity.ok(productService.fullUpdateProduct(id, updateProductRequest));
+        return ResponseEntity.ok(productService.replaceProduct(id, updateProductRequest));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductResponse> partialUpdateProduct
+    public ResponseEntity<ProductResponse> updateProduct
             (@PathVariable UUID id, @RequestBody @Valid PatchProductRequest patchProductRequest) {
-        return ResponseEntity.ok(productService.partialUpdateProduct
+        return ResponseEntity.ok(productService.updateProduct
                 (id,patchProductRequest));
     }
 

@@ -25,14 +25,14 @@ public class CategoryService {
                 .orElseThrow(() -> new CategoryNotFoundException(parentCategoryId));
     }
 
-    public List<CategoryResponse> getAllCategories() {
+    public List<CategoryResponse> getCategories() {
         return categoryRepository.findAll()
                 .stream()
                 .map(categoryMapper::toCategoryResponse)
                 .collect(Collectors.toList());
     }
 
-    public CategoryResponse getCategoryById(UUID id) {
+    public CategoryResponse getCategory(UUID id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
@@ -48,7 +48,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryResponse fullyUpdateCategory(UUID id, UpdateCategoryRequest updateCategoryRequest) {
+    public CategoryResponse replaceCategory(UUID id, UpdateCategoryRequest updateCategoryRequest) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
@@ -59,7 +59,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryResponse partialUpdateCategory(UUID id, PatchCategoryRequest patchCategoryRequest) {
+    public CategoryResponse updateCategory(UUID id, PatchCategoryRequest patchCategoryRequest) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 

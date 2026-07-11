@@ -20,13 +20,13 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public ProductResponse getProductById(UUID id) {
+    public ProductResponse getProduct(UUID id) {
         Product product = productRepository.findById(id).
                 orElseThrow(() -> new ProductNotFoundException(id));
         return productMapper.toProductResponse(product);
     }
 
-    public List<ProductResponse> getAllProducts() {
+    public List<ProductResponse> getProducts() {
         return productRepository.findAll()
                 .stream()
                 .map(productMapper::toProductResponse)
@@ -41,7 +41,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse fullUpdateProduct(UUID id, UpdateProductRequest updateProductRequest) {
+    public ProductResponse replaceProduct(UUID id, UpdateProductRequest updateProductRequest) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
@@ -50,7 +50,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse partialUpdateProduct(UUID id, PatchProductRequest patchProductRequest) {
+    public ProductResponse updateProduct(UUID id, PatchProductRequest patchProductRequest) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 

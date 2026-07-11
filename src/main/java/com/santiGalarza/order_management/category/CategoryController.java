@@ -21,12 +21,12 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getCategory(@PathVariable UUID id) {
-        return ResponseEntity.ok(categoryService.getCategoryById(id));
+        return ResponseEntity.ok(categoryService.getCategory(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getAllCategories(){
-        return ResponseEntity.ok(categoryService.getAllCategories());
+    public ResponseEntity<List<CategoryResponse>> getCategories(){
+        return ResponseEntity.ok(categoryService.getCategories());
     }
 
     @PostMapping
@@ -37,15 +37,15 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponse> fullyUpdateCategory(
+    public ResponseEntity<CategoryResponse> replaceCategory(
             @PathVariable UUID id, @RequestBody @Valid UpdateCategoryRequest updateCategoryRequest){
-        return ResponseEntity.ok(categoryService.fullyUpdateCategory(id, updateCategoryRequest));
+        return ResponseEntity.ok(categoryService.replaceCategory(id, updateCategoryRequest));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<CategoryResponse> partialUpdateCategory(
+    public ResponseEntity<CategoryResponse> updateCategory(
             @PathVariable UUID id, @RequestBody @Valid PatchCategoryRequest patchCategoryRequest){
-        return ResponseEntity.ok(categoryService.partialUpdateCategory
+        return ResponseEntity.ok(categoryService.updateCategory
                 (id,patchCategoryRequest));
     }
 
