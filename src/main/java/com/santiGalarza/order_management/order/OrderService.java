@@ -5,7 +5,6 @@ import com.santiGalarza.order_management.order.status.OrderStatusService;
 import com.santiGalarza.order_management.order.status.UpdateStatusRequest;
 import com.santiGalarza.order_management.product.Product;
 import com.santiGalarza.order_management.product.ProductService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +23,6 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final ProductService productService;
     private final OrderStatusService orderStatusService;
-
-    @Value("${order.delivery.max-attempts}")
-    private int maxDeliveryAttempts;
 
     public OrderService(
             OrderMapper orderMapper, OrderRepository orderRepository,
