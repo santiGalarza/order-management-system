@@ -41,6 +41,15 @@ public class Item {
     @Min(1)
     private int quantity;
 
+    public static Item of(Order order, Product product, int quantity) {
+        Item item = new Item();
+        item.order = order;
+        item.product = product;
+        item.quantity = quantity;
+        item.unitPrice = product.getPrice();
+        return item;
+    }
+
     public void updateQuantity(int newQuantity) {
         int delta = newQuantity - this.quantity;
         if (delta > 0) {

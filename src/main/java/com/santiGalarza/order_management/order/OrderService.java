@@ -64,13 +64,16 @@ public class OrderService {
 
         Map<UUID, Product> productMap = productService.getProductsByIds(productIds);
 
-        for(CreateItemRequest item : request.getItems()){
-            Product product = productMap.get(item.getProductId());
-            product.deductStock(item.getQuantity());
-        }
-
         Order order = orderMapper.toEntity(request);
         order.setCurrentStatus(orderStatusService.getInitialStatus());
+
+        for (CreateItemRequest itemRequest : request.getItems()) {
+            Product product = productMap.get(itemRequest.getProductId());
+            product.deductStock(itemRequest.getQuantity());
+            order.getItems().add(Item.of(order, product, itemRequest.getQuantity()));
+        }
+
+        order.recalculateTotalPrice();
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
 
@@ -113,25 +116,31 @@ public class OrderService {
         Item item = itemMapper.toEntity(request);
         item.setOrder(order);
         item.setProduct(product);
+        item.setUnitPrice(product.getPrice());
         order.getItems().add(item);
+        order.recalculateTotalPrice();
 
         return itemMapper.toResponseDto(itemRepository.save(item));
     }
 
     @Transactional
     public ItemResponse updateItemQuantity(UUID id, UUID itemId, PatchItemRequest request){
-        validateOrderIsModifiable(findOrder(id));
+        Order order = findOrder(id);
+        validateOrderIsModifiable(order);
 
         Item item = findItem(id,itemId);
         item.updateQuantity(request.getQuantity());
+        order.recalculateTotalPrice();
         return itemMapper.toResponseDto(itemRepository.save(item));
     }
 
     @Transactional
     public void deleteItem(UUID id, UUID itemId){
-        validateOrderIsModifiable(findOrder(id));
+        Order order = findOrder(id);
+        validateOrderIsModifiable(order);
         Item item = findItem(id,itemId);
         itemRepository.delete(item);
+        order.recalculateTotalPrice();
     }
 
     // Util methods

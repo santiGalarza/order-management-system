@@ -47,4 +47,11 @@ public class Order {
     public void incrementDeliveryAttempts() {
         this.deliveryAttempts++;
     }
+
+    public void recalculateTotalPrice() {
+        this.totalPrice = items.stream()
+                .map(item -> item.getUnitPrice()
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }
