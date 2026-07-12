@@ -1,7 +1,7 @@
 package com.santiGalarza.order_management.order;
 
 import com.santiGalarza.order_management.order.item.ItemResponse;
-import com.santiGalarza.order_management.order.status.Status;
+import com.santiGalarza.order_management.order.status.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,6 +12,6 @@ public record OrderResponse(
         UUID id,
         LocalDateTime creationDate,
         BigDecimal totalPrice,
-        Status status,
+        OrderStatus status,
         List<ItemResponse> items
 ) {}

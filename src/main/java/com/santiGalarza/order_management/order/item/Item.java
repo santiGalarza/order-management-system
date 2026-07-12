@@ -6,6 +6,7 @@ import com.santiGalarza.order_management.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import lombok.*;
@@ -24,16 +25,17 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "order_id")
     private Order order;
 
     @Positive
     @Digits(integer = 8, fraction = 2)
+    @NotNull
     private BigDecimal unitPrice;
 
     @Min(1)

@@ -2,7 +2,6 @@ package com.santiGalarza.order_management.order;
 
 import com.santiGalarza.order_management.order.item.Item;
 import com.santiGalarza.order_management.order.status.OrderStatus;
-import com.santiGalarza.order_management.order.status.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 

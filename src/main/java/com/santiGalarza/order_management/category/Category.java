@@ -25,6 +25,7 @@ public class Category {
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false)
     @NotNull
     private String name;
 
