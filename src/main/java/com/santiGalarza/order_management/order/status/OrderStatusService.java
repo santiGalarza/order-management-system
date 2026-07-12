@@ -42,6 +42,12 @@ public class OrderStatusService {
             order.incrementDeliveryAttempts();
         }
 
+        if (toCode.equals("CANCELLED") || toCode.equals("RETURNED")) {
+            order.getItems().forEach(item ->
+                    item.getProduct().restoreStock(item.getQuantity())
+            );
+        }
+
         historyRepository.save(OrderStatusHistory.of(order, current, next, changedBy, notes));
         order.setCurrentStatus(next);
     }
