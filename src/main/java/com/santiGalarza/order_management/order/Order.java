@@ -1,5 +1,7 @@
 package com.santiGalarza.order_management.order;
 
+import com.santiGalarza.order_management.order.item.Item;
+import com.santiGalarza.order_management.order.status.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 
@@ -10,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,27 +36,23 @@ public class Order {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Enumerated(EnumType.STRING)
-    private Status status = Status.PENDING;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "current_status_id")
+    private OrderStatus currentStatus;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Item> items;
+    private List<Item> items = new ArrayList<>();
 
-    @Setter(AccessLevel.NONE)
     private int deliveryAttempts = 0;
 
-    public void updateStatus(Status newStatus, int maxDeliveryAttempts) {
-        this.status.validateTransition(newStatus);
-        if (newStatus == Status.REATTEMPTING_DELIVERY) {
-            incrementDeliveryAttempts(maxDeliveryAttempts);
-        }
-        this.status = newStatus;
+    public void incrementDeliveryAttempts() {
+        this.deliveryAttempts++;
     }
 
-    private void incrementDeliveryAttempts(int maxDeliveryAttempts) {
-        if(deliveryAttempts >= maxDeliveryAttempts) {
-            throw new MaxDeliveryAttemptsExceededException(this.id);
-        }
-        deliveryAttempts++;
+    public void recalculateTotalPrice() {
+        this.totalPrice = items.stream()
+                .map(item -> item.getUnitPrice()
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.category;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CreateCategoryRequest {
 
-    @NotNull
+    @NotBlank
     private String name;
 
     private String description;

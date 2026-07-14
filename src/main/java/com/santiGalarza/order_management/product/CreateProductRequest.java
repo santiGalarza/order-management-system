@@ -37,5 +37,5 @@ public class CreateProductRequest {
 
     @NotNull
     @Positive
-    private Float weight;
+    private BigDecimal weight;
 }

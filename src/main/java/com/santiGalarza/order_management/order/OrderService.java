@@ -1,8 +1,10 @@
 package com.santiGalarza.order_management.order;
 
+import com.santiGalarza.order_management.order.item.*;
+import com.santiGalarza.order_management.order.status.OrderStatusService;
+import com.santiGalarza.order_management.order.status.UpdateStatusRequest;
 import com.santiGalarza.order_management.product.Product;
 import com.santiGalarza.order_management.product.ProductService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,18 +22,17 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
     private final ProductService productService;
-
-    @Value("${order.delivery.max-attempts}")
-    private int maxDeliveryAttempts;
+    private final OrderStatusService orderStatusService;
 
     public OrderService(
             OrderMapper orderMapper, OrderRepository orderRepository,
-            ProductService productService, ItemRepository itemRepository, ItemMapper itemMapper) {
+            ProductService productService, ItemRepository itemRepository, ItemMapper itemMapper, OrderStatusService orderStatusService) {
         this.orderMapper = orderMapper;
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
         this.itemMapper = itemMapper;
         this.productService = productService;
+        this.orderStatusService = orderStatusService;
     }
 
     // Order Class service methods
@@ -50,8 +51,8 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse createOrder(CreateOrderRequest createOrderRequest){
-        List<UUID> productIds = createOrderRequest.getItems()
+    public OrderResponse createOrder(CreateOrderRequest request){
+        List<UUID> productIds = request.getItems()
                 .stream()
                 .map(CreateItemRequest::getProductId)
                 .distinct()
@@ -59,19 +60,25 @@ public class OrderService {
 
         Map<UUID, Product> productMap = productService.getProductsByIds(productIds);
 
-        for(CreateItemRequest item : createOrderRequest.getItems()){
-            Product product = productMap.get(item.getProductId());
-            product.deductStock(item.getQuantity());
+        Order order = orderMapper.toEntity(request);
+        order.setCurrentStatus(orderStatusService.getInitialStatus());
+
+        for (CreateItemRequest itemRequest : request.getItems()) {
+            Product product = productMap.get(itemRequest.getProductId());
+            product.deductStock(itemRequest.getQuantity());
+            order.getItems().add(Item.of(order, product, itemRequest.getQuantity()));
         }
 
-        Order order = orderMapper.toEntity(createOrderRequest);
+        order.recalculateTotalPrice();
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
 
     @Transactional
-    public OrderResponse updateStatus(UUID id, UpdateStatusRequest updateStatusRequest){
+    public OrderResponse updateStatus(UUID id, UpdateStatusRequest request){
         Order order = findOrder(id);
-        order.updateStatus(updateStatusRequest.getStatus(),maxDeliveryAttempts);
+        // changedBy will be replaced with actual auth principal once auth is in
+        orderStatusService.transition(order, request.getStatusCode(), null, request.getNotes());
+
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
 
@@ -95,35 +102,41 @@ public class OrderService {
     }
 
     @Transactional
-    public ItemResponse createItem(UUID id, CreateItemRequest createItemRequest){
+    public ItemResponse createItem(UUID id, CreateItemRequest request){
         Order order = findOrder(id);
         validateOrderIsModifiable(order);
 
-        Product product = productService.findProduct(createItemRequest.getProductId());
-        product.deductStock(createItemRequest.getQuantity());
+        Product product = productService.findProduct(request.getProductId());
+        product.deductStock(request.getQuantity());
 
-        Item item = itemMapper.toEntity(createItemRequest);
+        Item item = itemMapper.toEntity(request);
         item.setOrder(order);
         item.setProduct(product);
+        item.setUnitPrice(product.getPrice());
         order.getItems().add(item);
+        order.recalculateTotalPrice();
 
         return itemMapper.toResponseDto(itemRepository.save(item));
     }
 
     @Transactional
-    public ItemResponse updateItemQuantity(UUID id, UUID itemId, PatchItemRequest patchItemRequest){
-        validateOrderIsModifiable(findOrder(id));
+    public ItemResponse updateItemQuantity(UUID id, UUID itemId, PatchItemRequest request){
+        Order order = findOrder(id);
+        validateOrderIsModifiable(order);
 
         Item item = findItem(id,itemId);
-        item.updateQuantity(patchItemRequest.getQuantity());
+        item.updateQuantity(request.getQuantity());
+        order.recalculateTotalPrice();
         return itemMapper.toResponseDto(itemRepository.save(item));
     }
 
     @Transactional
     public void deleteItem(UUID id, UUID itemId){
-        validateOrderIsModifiable(findOrder(id));
+        Order order = findOrder(id);
+        validateOrderIsModifiable(order);
         Item item = findItem(id,itemId);
         itemRepository.delete(item);
+        order.recalculateTotalPrice();
     }
 
     // Util methods
@@ -138,8 +151,8 @@ public class OrderService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
-    private void validateOrderIsModifiable(Order order){
-        if (!order.getStatus().isModifiable()) {
+    private void validateOrderIsModifiable(Order order) {
+        if (!order.getCurrentStatus().isModifiable()) {
             throw new OrderNotModifiableException(order.getId());
         }
     }

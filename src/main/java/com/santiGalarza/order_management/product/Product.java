@@ -23,6 +23,7 @@ public class Product {
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false)
     @NotNull
     private String name;
 
@@ -30,18 +31,21 @@ public class Product {
     @NotNull
     private BigDecimal price;
 
+    @Column(unique = true, nullable = false, updatable = false)
+    @Setter(AccessLevel.NONE)
     @Size(min = 8, max = 12)
-    @Column(unique = true)
     @NotEmpty
-    @NotNull
     private String sku;
 
+    @Column(nullable = false)
     @Positive
     private int minOrderQuantity;
 
+    @Column(nullable = false)
     @PositiveOrZero
     private int stockQuantity;
 
+    @Column(nullable = false)
     @Positive
     private float weight;
 

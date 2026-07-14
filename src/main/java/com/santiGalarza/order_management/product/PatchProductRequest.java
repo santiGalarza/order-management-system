@@ -1,6 +1,7 @@
 package com.santiGalarza.order_management.product;
 
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class PatchProductRequest {
 
+    @NotBlank
     private String name;
 
     @Digits(integer = 8, fraction = 2)

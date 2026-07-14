@@ -31,22 +31,21 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryResponse> createCategory(
-            @RequestBody @Valid CreateCategoryRequest createCategoryRequest) {
+            @RequestBody @Valid CreateCategoryRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                categoryService.createCategory(createCategoryRequest));
+                categoryService.createCategory(request));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> replaceCategory(
-            @PathVariable UUID id, @RequestBody @Valid UpdateCategoryRequest updateCategoryRequest){
-        return ResponseEntity.ok(categoryService.replaceCategory(id, updateCategoryRequest));
+            @PathVariable UUID id, @RequestBody @Valid UpdateCategoryRequest request){
+        return ResponseEntity.ok(categoryService.replaceCategory(id, request));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<CategoryResponse> updateCategory(
-            @PathVariable UUID id, @RequestBody @Valid PatchCategoryRequest patchCategoryRequest){
-        return ResponseEntity.ok(categoryService.updateCategory
-                (id,patchCategoryRequest));
+            @PathVariable UUID id, @RequestBody @Valid PatchCategoryRequest request){
+        return ResponseEntity.ok(categoryService.updateCategory(id,request));
     }
 
     @DeleteMapping("/{id}")

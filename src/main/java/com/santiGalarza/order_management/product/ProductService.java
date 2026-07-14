@@ -34,27 +34,27 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse createProduct(CreateProductRequest createProductRequest) {
-        Product product = productMapper.createProductRequestToProduct(createProductRequest);
+    public ProductResponse createProduct(CreateProductRequest request) {
+        Product product = productMapper.createProductRequestToProduct(request);
         Product savedProduct = productRepository.save(product);
         return productMapper.toProductResponse(savedProduct);
     }
 
     @Transactional
-    public ProductResponse replaceProduct(UUID id, UpdateProductRequest updateProductRequest) {
+    public ProductResponse replaceProduct(UUID id, UpdateProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
-        productMapper.updateProductFromRequest(updateProductRequest, product);
+        productMapper.updateProductFromRequest(request, product);
         return productMapper.toProductResponse(productRepository.save(product));
     }
 
     @Transactional
-    public ProductResponse updateProduct(UUID id, PatchProductRequest patchProductRequest) {
+    public ProductResponse updateProduct(UUID id, PatchProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
-        productMapper.patchProductFromRequest(patchProductRequest, product);
+        productMapper.patchProductFromRequest(request, product);
         return productMapper.toProductResponse(productRepository.save(product));
     }
 

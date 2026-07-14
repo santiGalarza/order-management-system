@@ -16,7 +16,7 @@ public class UpdateProductRequest {
     private String name;
 
     @NotNull
-    @Digits(integer = 6, fraction = 2)
+    @Digits(integer = 8, fraction = 2)
     private BigDecimal price;
 
     @NotNull

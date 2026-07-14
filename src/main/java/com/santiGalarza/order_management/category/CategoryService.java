@@ -40,32 +40,32 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryResponse createCategory(CreateCategoryRequest createCategoryRequest) {
-        Category category = categoryMapper.toEntity(createCategoryRequest);
-        category.setParentCategory(resolveParent(createCategoryRequest.getParentCategoryId()));
+    public CategoryResponse createCategory(CreateCategoryRequest request) {
+        Category category = categoryMapper.toEntity(request);
+        category.setParentCategory(resolveParent(request.getParentCategoryId()));
 
         return categoryMapper.toCategoryResponse(categoryRepository.save(category));
     }
 
     @Transactional
-    public CategoryResponse replaceCategory(UUID id, UpdateCategoryRequest updateCategoryRequest) {
+    public CategoryResponse replaceCategory(UUID id, UpdateCategoryRequest request) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
-        categoryMapper.updateCategory(updateCategoryRequest, category);
-        category.setParentCategory(resolveParent(updateCategoryRequest.getParentCategoryId()));
+        categoryMapper.updateCategory(request, category);
+        category.setParentCategory(resolveParent(request.getParentCategoryId()));
 
         return categoryMapper.toCategoryResponse(categoryRepository.save(category));
     }
 
     @Transactional
-    public CategoryResponse updateCategory(UUID id, PatchCategoryRequest patchCategoryRequest) {
+    public CategoryResponse updateCategory(UUID id, PatchCategoryRequest request) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
-        categoryMapper.patchCategory(patchCategoryRequest, category);
-        if (patchCategoryRequest.getParentCategoryId() != null) {
-            category.setParentCategory(resolveParent(patchCategoryRequest.getParentCategoryId()));
+        categoryMapper.patchCategory(request, category);
+        if (request.getParentCategoryId() != null) {
+            category.setParentCategory(resolveParent(request.getParentCategoryId()));
         }
 
         return categoryMapper.toCategoryResponse(categoryRepository.save(category));

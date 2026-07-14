@@ -1,5 +1,6 @@
-package com.santiGalarza.order_management.order;
+package com.santiGalarza.order_management.order.status;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UpdateStatusRequest {
-    @NotNull
-    private Status status;
+
+    @NotBlank
+    private String statusCode;
+
+    private String notes;
 }
