@@ -4,12 +4,13 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
-    @Mapping(target = "parentCategory",source = "parentCategoryId",qualifiedByName = "uuidToCategory")
+
+    @Mapping(target = "parentCategory", ignore = true)
     Category toEntity(CreateCategoryRequest createCategoryRequest);
 
     CategoryResponse toCategoryResponse(Category category);
 
-    @Mapping(target = "parentCategory",ignore = true)
+    @Mapping(target = "parentCategory", ignore = true)
     void updateCategory(UpdateCategoryRequest updateCategoryRequest, @MappingTarget Category category);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
