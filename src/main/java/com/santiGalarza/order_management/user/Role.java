@@ -1,5 +1,6 @@
-package com.santiGalarza.order_management.security;
+package com.santiGalarza.order_management.user;
 
+import com.santiGalarza.order_management.user.Permission;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

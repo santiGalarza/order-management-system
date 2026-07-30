@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.security;
+package com.santiGalarza.order_management.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

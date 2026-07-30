@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.security;
+package com.santiGalarza.order_management.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
