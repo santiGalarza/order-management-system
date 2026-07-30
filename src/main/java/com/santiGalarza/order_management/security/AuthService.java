@@ -1,11 +1,9 @@
 package com.santiGalarza.order_management.security;
 
-import com.santiGalarza.order_management.user.Role;
-import com.santiGalarza.order_management.user.RoleRepository;
-import com.santiGalarza.order_management.user.User;
-import com.santiGalarza.order_management.user.UserRepository;
+import com.santiGalarza.order_management.user.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,18 +15,20 @@ import java.util.Set;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
     public AuthService(
-            UserRepository userRepository,
+            UserRepository userRepository, UserMapper userMapper,
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder,
             JwtUtil jwtUtil,
             AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
@@ -69,5 +69,11 @@ public class AuthService {
 
         String token = jwtUtil.generateToken(user);
         return new AuthResponse(token);
+    }
+
+    public UserResponse me(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userMapper.toResponseDto(user);
     }
 }
