@@ -19,19 +19,21 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final RefreshTokenService refreshTokenService;
     private final AuthenticationManager authenticationManager;
 
     public AuthService(
             UserRepository userRepository, UserMapper userMapper,
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder,
-            JwtUtil jwtUtil,
+            JwtUtil jwtUtil, RefreshTokenService refreshTokenService,
             AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.refreshTokenService = refreshTokenService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -54,8 +56,10 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
-        String token = jwtUtil.generateToken(user);
-        return new AuthResponse(token);
+
+        String accessToken = jwtUtil.generateToken(user);
+        String refreshToken = refreshTokenService.generate(user.getEmail());
+        return new AuthResponse(accessToken, refreshToken);
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -65,10 +69,28 @@ public class AuthService {
                         request.getPassword()));
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalStateException("User not found after authentication"));
+                .orElseThrow(() -> new IllegalStateException(
+                        "User not found after authentication"));
 
-        String token = jwtUtil.generateToken(user);
-        return new AuthResponse(token);
+        String accessToken = jwtUtil.generateToken(user);
+        String refreshToken = refreshTokenService.generate(user.getEmail());
+        return new AuthResponse(accessToken, refreshToken);
+    }
+
+    public AuthResponse refresh(RefreshRequest request) {
+        String email = refreshTokenService.validate(request.getRefreshToken());
+        refreshTokenService.revoke(request.getRefreshToken());
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
+        String newAccessToken = jwtUtil.generateToken(user);
+        String newRefreshToken = refreshTokenService.generate(email);
+        return new AuthResponse(newAccessToken, newRefreshToken);
+    }
+
+    public void logout(RefreshRequest request) {
+        refreshTokenService.revoke(request.getRefreshToken());
     }
 
     public UserResponse me(String email) {

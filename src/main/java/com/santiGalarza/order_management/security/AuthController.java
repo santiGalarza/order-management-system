@@ -1,7 +1,9 @@
 package com.santiGalarza.order_management.security;
 
+import com.santiGalarza.order_management.user.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,9 +16,6 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @GetMapping("/me")
-    public
-
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
@@ -26,5 +25,21 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
+    }
+
+    @PostMapping("/refresh")
+    public AuthResponse refresh(@Valid @RequestBody RefreshRequest request) {
+        return authService.refresh(request);
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(@Valid @RequestBody RefreshRequest request) {
+        authService.logout(request);
+    }
+
+    @GetMapping("/me")
+    public UserResponse me(@AuthenticationPrincipal String email) {
+        return authService.me(email);
     }
 }
