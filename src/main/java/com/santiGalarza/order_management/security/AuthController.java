@@ -1,6 +1,6 @@
 package com.santiGalarza.order_management.security;
 
-import com.santiGalarza.order_management.user.UserResponse;
+import com.santiGalarza.order_management.user.dto.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,10 +36,5 @@ public class AuthController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(@Valid @RequestBody RefreshRequest request) {
         authService.logout(request);
-    }
-
-    @GetMapping("/me")
-    public UserResponse me(@AuthenticationPrincipal String email) {
-        return authService.me(email);
     }
 }

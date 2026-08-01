@@ -1,6 +1,7 @@
 package com.santiGalarza.order_management.security;
 
 import com.santiGalarza.order_management.user.*;
+import com.santiGalarza.order_management.user.dto.UserResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +16,6 @@ import java.util.Set;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
@@ -23,13 +23,12 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthService(
-            UserRepository userRepository, UserMapper userMapper,
+            UserRepository userRepository,
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder,
             JwtUtil jwtUtil, RefreshTokenService refreshTokenService,
             AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
@@ -63,14 +62,15 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
+        String email = request.getEmail();
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        email,
                         request.getPassword()));
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalStateException(
-                        "User not found after authentication"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
 
         String accessToken = jwtUtil.generateToken(user);
         String refreshToken = refreshTokenService.generate(user.getEmail());
@@ -91,11 +91,5 @@ public class AuthService {
 
     public void logout(RefreshRequest request) {
         refreshTokenService.revoke(request.getRefreshToken());
-    }
-
-    public UserResponse me(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return userMapper.toResponseDto(user);
     }
 }
