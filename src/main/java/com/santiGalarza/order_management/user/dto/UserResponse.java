@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.user;
+package com.santiGalarza.order_management.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
