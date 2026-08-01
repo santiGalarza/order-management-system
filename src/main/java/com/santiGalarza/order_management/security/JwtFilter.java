@@ -41,7 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String email = jwtUtil.extractUsername(token);
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if(jwtUtil.isTokenExpired(token)) {
+            if(!jwtUtil.isTokenExpired(token)) {
                 List<SimpleGrantedAuthority> authorities = jwtUtil.extractAuthorities(token)
                         .stream()
                         .map(SimpleGrantedAuthority::new)
