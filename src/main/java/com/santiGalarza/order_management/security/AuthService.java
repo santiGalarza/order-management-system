@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.security;
 
+import com.santiGalarza.order_management.security.token.RefreshTokenData;
 import com.santiGalarza.order_management.user.*;
 import com.santiGalarza.order_management.user.dto.UserResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -57,7 +58,7 @@ public class AuthService {
         userRepository.save(user);
 
         String accessToken = jwtUtil.generateToken(user);
-        String refreshToken = refreshTokenService.generate(user.getEmail());
+        String refreshToken = refreshTokenService.generate(user, null);
         return new AuthResponse(accessToken, refreshToken);
     }
 
@@ -70,26 +71,27 @@ public class AuthService {
                         request.getPassword()));
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(email));
+                .orElseThrow(() -> new UserNotFoundException(email));
 
         String accessToken = jwtUtil.generateToken(user);
-        String refreshToken = refreshTokenService.generate(user.getEmail());
+        String refreshToken = refreshTokenService.generate(user, request.getDeviceId());
         return new AuthResponse(accessToken, refreshToken);
     }
 
     public AuthResponse refresh(RefreshRequest request) {
-        String email = refreshTokenService.validate(request.getRefreshToken());
-        refreshTokenService.revoke(request.getRefreshToken());
+        RefreshTokenData data = refreshTokenService.peek(request.getRefreshToken());
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalStateException("User not found"));
+        User user = userRepository.findById(data.userId())
+                .orElseThrow(() -> new UserNotFoundException(data.userId()));
+
+        refreshTokenService.validate(request.getRefreshToken(), user);
+        refreshTokenService.revoke(request.getRefreshToken(), user.getId());
 
         String newAccessToken = jwtUtil.generateToken(user);
-        String newRefreshToken = refreshTokenService.generate(email);
+        String newRefreshToken = refreshTokenService.generate(user, data.deviceId());
         return new AuthResponse(newAccessToken, newRefreshToken);
     }
-
     public void logout(RefreshRequest request) {
-        refreshTokenService.revoke(request.getRefreshToken());
-    }
-}
+        RefreshTokenData data = refreshTokenService.peek(request.getRefreshToken());
+        refreshTokenService.revoke(request.getRefreshToken(), data.userId());
+    }}
