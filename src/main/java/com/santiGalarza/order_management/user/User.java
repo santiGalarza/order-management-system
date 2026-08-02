@@ -50,6 +50,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean isActive = true;
 
+    @Column(nullable = false)
+    private int tokenVersion = 0;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -104,5 +107,9 @@ public class User implements UserDetails {
         user.firstName = firstName;
         user.lastName = lastName;
         return user;
+    }
+
+    public void incrementTokenVersion() {
+        this.tokenVersion++;
     }
 }

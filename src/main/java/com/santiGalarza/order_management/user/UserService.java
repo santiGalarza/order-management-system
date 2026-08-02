@@ -62,6 +62,7 @@ public class UserService {
             throw new BadCredentialsException("Current password is incorrect");
         }
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.incrementTokenVersion();
         userRepository.save(user);
     }
 
