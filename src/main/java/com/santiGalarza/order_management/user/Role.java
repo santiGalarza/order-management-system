@@ -46,4 +46,16 @@ public class Role {
         role.description = description;
         return role;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Role role)) return false;
+        return name != null && name.equals(role.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name != null ? name.hashCode() : 0;
+    }
 }
