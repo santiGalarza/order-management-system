@@ -9,8 +9,6 @@ import java.lang.annotation.Target;
 
 public final class RequiresPermission {
 
-    private RequiresPermission() {}
-
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
     @PreAuthorize("hasAuthority('ORDER_READ')")
@@ -105,6 +103,11 @@ public final class RequiresPermission {
     @Retention(RetentionPolicy.RUNTIME)
     @PreAuthorize("hasAuthority('USER_ASSIGN_ROLE')")
     public @interface UserAssignRole {}
+
+    @Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @PreAuthorize("hasAuthority('USER_SET_ROLE')")
+    public @interface UserSetRole {}
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
