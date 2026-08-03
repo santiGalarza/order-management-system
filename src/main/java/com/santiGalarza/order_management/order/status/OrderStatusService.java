@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class OrderStatusService {
 
     private final OrderStatusRepository statusRepository;
@@ -34,7 +34,7 @@ public class OrderStatusService {
         transitionRepository.findByFromStatusIdAndToStatusId(current.getId(), next.getId())
                 .orElseThrow(() -> new InvalidOrderStatusTransitionException(current.getCode(), next.getCode()));
 
-        if (toCode.equals("REATTEMPTING_DELIVERY")) {
+        if (toCode.equals(StatusCodes.REATTEMPTING_DELIVERY)) {
             int maxAttempts = Integer.parseInt(next.getMetadata("max_attempts"));
             if (order.getDeliveryAttempts() >= maxAttempts) {
                 throw new MaxDeliveryAttemptsExceededException(order.getId());
@@ -42,10 +42,9 @@ public class OrderStatusService {
             order.incrementDeliveryAttempts();
         }
 
-        if (toCode.equals("CANCELLED") || toCode.equals("RETURNED")) {
+        if (toCode.equals(StatusCodes.CANCELLED) || toCode.equals(StatusCodes.RETURN_CONFIRMED)) {
             order.getItems().forEach(item ->
-                    item.getProduct().restoreStock(item.getQuantity())
-            );
+                    item.getProduct().restoreStock(item.getQuantity()));
         }
 
         historyRepository.save(OrderStatusHistory.of(order, current, next, changedBy, notes));

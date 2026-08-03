@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,13 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrders());
     }
 
+    @GetMapping("/my")
+    @RequiresPermission.OrderRead
+    public ResponseEntity<List<OrderResponse>> getMyOrders(
+            @AuthenticationPrincipal String email) {
+        return ResponseEntity.ok(orderService.getMyOrders(email));
+    }
+
     @GetMapping("/{id}")
     @RequiresPermission.OrderRead
     public ResponseEntity<OrderResponse> getOrder(@PathVariable UUID id) {
@@ -38,8 +46,11 @@ public class OrderController {
 
     @PostMapping
     @RequiresPermission.OrderCreate
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid CreateOrderRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(request));
+    public ResponseEntity<OrderResponse> createOrder(
+            @RequestBody @Valid CreateOrderRequest request,
+            @AuthenticationPrincipal String email
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(request, email));
     }
 
     @PatchMapping("/{id}/status")
