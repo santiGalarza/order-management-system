@@ -25,7 +25,7 @@ public class RefreshTokenRepository {
             StringRedisTemplate redisTemplate,
             ObjectMapper objectMapper,
             TokenHasher tokenHasher,
-            @Value("${jwt.refresh-expiration}") long refreshExpiration) {
+            @Value("${jwt.refresh.expiration}") long refreshExpiration) {
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
         this.tokenHasher = tokenHasher;
