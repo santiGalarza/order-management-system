@@ -3,6 +3,7 @@ package com.santiGalarza.order_management.security.token;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
+import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
@@ -39,7 +40,7 @@ public class RefreshTokenRepository {
             redisTemplate.opsForValue().set(PREFIX + hashed, json, ttl);
             redisTemplate.opsForSet().add(USER_TOKENS_PREFIX + data.userId(), hashed);
             redisTemplate.expire(USER_TOKENS_PREFIX + data.userId(), ttl);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new RuntimeException("Failed to serialize refresh token", e);
         }
     }
@@ -49,7 +50,7 @@ public class RefreshTokenRepository {
         if (json == null) return Optional.empty();
         try {
             return Optional.of(objectMapper.readValue(json, RefreshTokenData.class));
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new RuntimeException("Failed to deserialize refresh token", e);
         }
     }
@@ -64,7 +65,7 @@ public class RefreshTokenRepository {
         if (json == null) return Optional.empty();
         try {
             return Optional.of(objectMapper.readValue(json, RefreshTokenData.class));
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new RuntimeException("Failed to deserialize revoked token", e);
         }
     }
