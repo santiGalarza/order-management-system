@@ -12,6 +12,7 @@ public record OrderResponse(
         UUID id,
         LocalDateTime creationDate,
         BigDecimal totalPrice,
-        OrderStatus status,
+        String statusCode,
+        String statusLabel,
         List<ItemResponse> items
 ) {}

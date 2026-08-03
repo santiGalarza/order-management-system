@@ -2,6 +2,7 @@ package com.santiGalarza.order_management.order;
 
 import com.santiGalarza.order_management.order.item.Item;
 import com.santiGalarza.order_management.order.status.OrderStatus;
+import com.santiGalarza.order_management.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 
@@ -42,6 +43,10 @@ public class Order {
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items = new ArrayList<>();
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private int deliveryAttempts = 0;
 

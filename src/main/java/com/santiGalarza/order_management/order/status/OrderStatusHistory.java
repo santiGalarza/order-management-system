@@ -34,7 +34,6 @@ public class OrderStatusHistory {
     @JoinColumn(name = "to_status_id")
     private OrderStatus toStatus;
 
-    // replace with actual client
     @Column(name = "changed_by")
     private UUID changedBy;
 

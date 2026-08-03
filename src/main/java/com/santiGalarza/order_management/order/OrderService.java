@@ -5,6 +5,10 @@ import com.santiGalarza.order_management.order.status.OrderStatusService;
 import com.santiGalarza.order_management.order.status.UpdateStatusRequest;
 import com.santiGalarza.order_management.product.Product;
 import com.santiGalarza.order_management.product.ProductService;
+import com.santiGalarza.order_management.user.User;
+import com.santiGalarza.order_management.user.UserNotFoundException;
+import com.santiGalarza.order_management.user.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,24 +25,35 @@ public class OrderService {
     private final ItemMapper itemMapper;
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
     private final ProductService productService;
     private final OrderStatusService orderStatusService;
 
     public OrderService(
             OrderMapper orderMapper, OrderRepository orderRepository,
-            ProductService productService, ItemRepository itemRepository, ItemMapper itemMapper, OrderStatusService orderStatusService) {
+            ProductService productService, ItemRepository itemRepository, ItemMapper itemMapper, UserRepository userRepository, OrderStatusService orderStatusService) {
         this.orderMapper = orderMapper;
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
         this.itemMapper = itemMapper;
         this.productService = productService;
+        this.userRepository = userRepository;
         this.orderStatusService = orderStatusService;
     }
 
-    // Order Class service methods
+    // Order service methods
 
-    public List<OrderResponse> getOrders(){
+    public List<OrderResponse> getOrders() {
         return orderRepository.findAll()
+                .stream()
+                .map(orderMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<OrderResponse> getMyOrders(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+        return orderRepository.findByUserId(user.getId())
                 .stream()
                 .map(orderMapper::toResponseDto)
                 .collect(Collectors.toList());
@@ -51,7 +66,10 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse createOrder(CreateOrderRequest request){
+    public OrderResponse createOrder(CreateOrderRequest request, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+
         List<UUID> productIds = request.getItems()
                 .stream()
                 .map(CreateItemRequest::getProductId)
@@ -69,16 +87,22 @@ public class OrderService {
             order.getItems().add(Item.of(order, product, itemRequest.getQuantity()));
         }
 
+        order.setUser(user);
         order.recalculateTotalPrice();
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
 
     @Transactional
-    public OrderResponse updateStatus(UUID id, UpdateStatusRequest request){
+    public OrderResponse updateStatus(UUID id, UpdateStatusRequest request) {
         Order order = findOrder(id);
-        // changedBy will be replaced with actual auth principal once auth is in
-        orderStatusService.transition(order, request.getStatusCode(), null, request.getNotes());
 
+        String email = (String) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        User changedBy = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+
+        orderStatusService.transition(order, request.getStatusCode(), changedBy.getId(), request.getNotes());
         return orderMapper.toResponseDto(orderRepository.save(order));
     }
 
@@ -109,10 +133,7 @@ public class OrderService {
         Product product = productService.findProduct(request.getProductId());
         product.deductStock(request.getQuantity());
 
-        Item item = itemMapper.toEntity(request);
-        item.setOrder(order);
-        item.setProduct(product);
-        item.setUnitPrice(product.getPrice());
+        Item item = Item.of(order, product, request.getQuantity());
         order.getItems().add(item);
         order.recalculateTotalPrice();
 
