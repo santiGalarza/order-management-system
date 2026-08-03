@@ -1,6 +1,7 @@
 package com.santiGalarza.order_management.security.constants;
 
 import com.santiGalarza.order_management.security.token.RefreshTokenRepository;
+import com.santiGalarza.order_management.security.RefreshTokenReusedException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,8 +12,6 @@ public class RefreshTokenReusePolicy {
     public RefreshTokenReusePolicy(RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
     }
-
-    // revokes all sessions if a revoked token is being used (TODO: implement logs)
 
     public void enforce(String rawToken) {
         if(!refreshTokenRepository.isRevoked(rawToken)) return;

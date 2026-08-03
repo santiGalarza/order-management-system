@@ -2,10 +2,8 @@ package com.santiGalarza.order_management.security;
 
 import com.santiGalarza.order_management.security.token.RefreshTokenData;
 import com.santiGalarza.order_management.user.*;
-import com.santiGalarza.order_management.user.dto.UserResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
