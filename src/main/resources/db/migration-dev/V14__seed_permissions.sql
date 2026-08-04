@@ -18,4 +18,8 @@ INSERT INTO permissions (id, name, description) VALUES
 ('4b9c6914-6ef6-4959-9798-5862c4e25f28', 'USER_UPDATE_ALL', 'User update all'),
 ('5298abd5-f67e-4b11-a26b-990bd7cba511', 'USER_DELETE', 'User delete'),
 ('710cd795-79ae-4c6d-8621-670805a77deb', 'USER_ASSIGN_ROLE', 'User assign role'),
+('f3a1c9de-6b52-4e3a-9d17-2a8f6c0b41d5', 'USER_SET_ROLE', 'Activate/deactivate users'),
 ('bdb94f9b-3530-4bb9-8b88-e6a7b2e89862', 'STATUS_MANAGE', 'Status manage');
+
+
+
