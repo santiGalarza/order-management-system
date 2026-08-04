@@ -1,0 +1,334 @@
+### ================================================================
+### Order Management System — API smoke test collection
+### Run top to bottom in IntelliJ's HTTP client (the ▶ next to each block).
+### Named requests (@name) use a response handler script
+### ( > {% client.global.set("var", response.body.field); %} ) to stash
+### tokens/IDs into global variables, which later requests reference as
+### plain {{var}} placeholders.
+###
+### Seeded users (all share password: devpassword123):
+###   admin@example.com     -> role ADMIN
+###   employee@example.com  -> role EMPLOYEE
+###   customer@example.com  -> role USER
+### ================================================================
+
+@baseUrl = http://localhost:8080
+
+### ----------------------------------------------------------------
+### AUTH — log in as all three roles up front, reuse tokens below
+### ----------------------------------------------------------------
+
+# @name loginAsAdmin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "devpassword123",
+  "deviceId": "test-admin"
+}
+
+> {%
+    client.global.set("adminToken", response.body.token);
+    client.global.set("adminRefreshToken", response.body.refreshToken);
+%}
+
+###
+# @name loginAsEmployee
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "employee@example.com",
+  "password": "devpassword123",
+  "deviceId": "test-employee"
+}
+
+> {%
+    client.global.set("employeeToken", response.body.token);
+    client.global.set("employeeRefreshToken", response.body.refreshToken);
+%}
+
+###
+# @name loginAsCustomer
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "password": "devpassword123",
+  "deviceId": "test-customer"
+}
+
+> {%
+    client.global.set("customerToken", response.body.token);
+    client.global.set("customerRefreshToken", response.body.refreshToken);
+%}
+
+### Register a brand-new user (separate from the seeded ones)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "password123",
+  "firstName": "New",
+  "lastName": "User"
+}
+
+### Refresh token (using customer's refresh token)
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{customerRefreshToken}}"
+}
+
+### Logout (invalidate customer's refresh token)
+POST {{baseUrl}}/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "{{customerRefreshToken}}"
+}
+
+### Login with WRONG password — expect 401, not 500
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "password": "wrongpassword",
+  "deviceId": "test-customer"
+}
+
+
+### ----------------------------------------------------------------
+### USERS
+### ----------------------------------------------------------------
+
+### Get my own profile — as customer
+GET {{baseUrl}}/users/me
+Authorization: Bearer {{customerToken}}
+
+### Get all users — as ADMIN, expect 200
+GET {{baseUrl}}/users
+Authorization: Bearer {{adminToken}}
+
+### Get all users — as CUSTOMER, expect 403
+GET {{baseUrl}}/users
+Authorization: Bearer {{customerToken}}
+
+### Update my profile (full replace) — as customer
+PUT {{baseUrl}}/users/me
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Chris",
+  "lastName": "Customerson"
+}
+
+### Patch my profile — as customer
+PATCH {{baseUrl}}/users/me
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Chris",
+  "lastName": "Updated"
+}
+
+### Change my password — as customer
+POST {{baseUrl}}/users/me/change-password
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "currentPassword": "devpassword123",
+  "newPassword": "newpassword456"
+}
+
+### Assign EMPLOYEE role to the seeded customer — as ADMIN, expect 200
+POST {{baseUrl}}/users/39851b38-d96b-4ee4-88ef-49981724666a/roles
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "roleName": "EMPLOYEE"
+}
+
+### Assign a role — as EMPLOYEE (not admin), expect 403
+POST {{baseUrl}}/users/39851b38-d96b-4ee4-88ef-49981724666a/roles
+Authorization: Bearer {{employeeToken}}
+Content-Type: application/json
+
+{
+  "roleName": "ADMIN"
+}
+
+### Revoke the role we just assigned — as ADMIN
+DELETE {{baseUrl}}/users/39851b38-d96b-4ee4-88ef-49981724666a/roles
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "roleName": "EMPLOYEE"
+}
+
+### Deactivate the seeded customer — as ADMIN
+PATCH {{baseUrl}}/users/39851b38-d96b-4ee4-88ef-49981724666a/active?active=false
+Authorization: Bearer {{adminToken}}
+
+### Reactivate — as ADMIN
+PATCH {{baseUrl}}/users/39851b38-d96b-4ee4-88ef-49981724666a/active?active=true
+Authorization: Bearer {{adminToken}}
+
+### No token at all — expect 401
+GET {{baseUrl}}/users/me
+
+
+### ----------------------------------------------------------------
+### ORDERS
+### ----------------------------------------------------------------
+
+### Get all orders — as ADMIN/EMPLOYEE, expect 200
+GET {{baseUrl}}/api/v1/orders
+Authorization: Bearer {{adminToken}}
+
+### Get all orders — as CUSTOMER, expect 403
+GET {{baseUrl}}/api/v1/orders
+Authorization: Bearer {{customerToken}}
+
+### Get my orders — as customer
+GET {{baseUrl}}/api/v1/orders/my
+Authorization: Bearer {{customerToken}}
+
+### Create an order — as customer (2x Wireless Mouse, 1x USB-C Cable)
+# @name createOrder
+POST {{baseUrl}}/api/v1/orders
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "a1bcc21d-cc6d-47a1-8e89-ba7830cd3014",
+      "quantity": 2
+    },
+    {
+      "productId": "671c377f-c389-44ed-9a97-e857d0400fde",
+      "quantity": 1
+    }
+  ]
+}
+
+> {%
+    client.global.set("orderId", response.body.id);
+%}
+
+### Get order by id
+GET {{baseUrl}}/api/v1/orders/{{orderId}}
+Authorization: Bearer {{customerToken}}
+
+### Get items for that order
+GET {{baseUrl}}/api/v1/orders/{{orderId}}/items
+Authorization: Bearer {{customerToken}}
+
+### Add an item to the order (Mechanical Keyboard)
+# @name createItem
+POST {{baseUrl}}/api/v1/orders/{{orderId}}/items
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "productId": "2db40354-4ec2-41e4-9d8e-9192143ac60a",
+  "quantity": 1
+}
+
+> {%
+    client.global.set("itemId", response.body.id);
+%}
+
+### Get that specific item
+GET {{baseUrl}}/api/v1/orders/{{orderId}}/items/{{itemId}}
+Authorization: Bearer {{customerToken}}
+
+### Update item quantity
+PATCH {{baseUrl}}/api/v1/orders/{{orderId}}/items/{{itemId}}
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+### Update order status: PENDING -> CONFIRMED — as EMPLOYEE, expect 200
+### (adjust codes here if your order_status_transitions seed differs)
+PATCH {{baseUrl}}/api/v1/orders/{{orderId}}/status
+Authorization: Bearer {{employeeToken}}
+Content-Type: application/json
+
+{
+  "statusCode": "CONFIRMED",
+  "notes": "Confirmed via smoke test"
+}
+
+### Try to modify items AFTER confirming — order is no longer modifiable, expect 4xx
+PATCH {{baseUrl}}/api/v1/orders/{{orderId}}/items/{{itemId}}
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "quantity": 10
+}
+
+### Try an INVALID status transition (CONFIRMED -> DELIVERED, skipping SHIPPED) — expect 400/409
+PATCH {{baseUrl}}/api/v1/orders/{{orderId}}/status
+Authorization: Bearer {{employeeToken}}
+Content-Type: application/json
+
+{
+  "statusCode": "DELIVERED",
+  "notes": "Skipping straight to delivered — should be rejected"
+}
+
+### Delete the order — as ADMIN
+DELETE {{baseUrl}}/api/v1/orders/{{orderId}}
+Authorization: Bearer {{adminToken}}
+
+### No token at all — expect 401
+GET {{baseUrl}}/api/v1/orders/my
+
+### Order that doesn't exist — expect 404, not 500
+GET {{baseUrl}}/api/v1/orders/ffffffff-ffff-ffff-ffff-ffffffffffff
+Authorization: Bearer {{customerToken}}
+
+### Create an order with a NONEXISTENT product — expect 404, not 500
+POST {{baseUrl}}/api/v1/orders
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+      "quantity": 1
+    }
+  ]
+}
+
+### Create an order exceeding available stock — expect 400/409, not 500
+### (Running Shoes has stock_quantity 60)
+POST {{baseUrl}}/api/v1/orders
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "8281895f-bf81-4af3-90ea-b09236e108c6",
+      "quantity": 9999
+    }
+  ]
+}
