@@ -1,5 +1,8 @@
 package com.santiGalarza.order_management.product;
 
+import com.santiGalarza.order_management.category.Category;
+import com.santiGalarza.order_management.category.CategoryNotFoundException;
+import com.santiGalarza.order_management.category.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,10 +15,12 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ProductService {
 
+    private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductService(CategoryRepository categoryRepository, ProductRepository productRepository, ProductMapper productMapper) {
+        this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
         this.productMapper = productMapper;
     }
@@ -36,16 +41,20 @@ public class ProductService {
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request) {
         Product product = productMapper.createProductRequestToProduct(request);
-        Product savedProduct = productRepository.save(product);
-        return productMapper.toProductResponse(savedProduct);
-    }
+        Category category = findCategory(request.getCategoryId());
+        product.setCategory(category);
+
+        Product saved = productRepository.save(product);
+        return productMapper.toProductResponse(saved);    }
 
     @Transactional
     public ProductResponse replaceProduct(UUID id, UpdateProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
+        Category category = findCategory(request.getCategoryId());
 
         productMapper.updateProductFromRequest(request, product);
+        product.setCategory(category);
         return productMapper.toProductResponse(productRepository.save(product));
     }
 
@@ -53,6 +62,10 @@ public class ProductService {
     public ProductResponse updateProduct(UUID id, PatchProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
+        if(request.getCategoryId()!=null) {
+            Category category = findCategory(request.getCategoryId());
+            product.setCategory(category);
+        }
 
         productMapper.patchProductFromRequest(request, product);
         return productMapper.toProductResponse(productRepository.save(product));
@@ -83,5 +96,10 @@ public class ProductService {
     public Product findProduct(UUID id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
+    }
+
+    private Category findCategory(UUID id){
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
     }
 }

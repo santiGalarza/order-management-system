@@ -9,6 +9,8 @@ public record ProductResponse(
         String name,
         BigDecimal price,
         String sku,
+        UUID categoryId,
+        String categoryName,
         boolean isActive,
         int minOrderQuantity,
         int stockQuantity,
