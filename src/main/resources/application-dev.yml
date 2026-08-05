@@ -1,0 +1,5 @@
+spring:
+  flyway:
+    locations: classpath:db/migration,classpath:db/migration-dev
+    placeholders:
+      bcryptHash: ${SEED_BCRYPT_HASH}

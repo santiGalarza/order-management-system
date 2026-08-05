@@ -10,6 +10,7 @@ public interface OrderMapper {
     @Mapping(target = "currentStatus", ignore = true)
     Order toEntity(CreateOrderRequest createOrderRequest);
 
+    @Mapping(source = "createdAt", target = "creationDate")
     @Mapping(source = "currentStatus.code", target = "statusCode")
     @Mapping(source = "currentStatus.label", target = "statusLabel")
     OrderResponse toResponseDto(Order order);

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -33,4 +34,7 @@ public class UpdateProductRequest {
     @NotNull
     @Positive
     private Float weight;
+
+    @NotNull
+    private UUID categoryId;
 }

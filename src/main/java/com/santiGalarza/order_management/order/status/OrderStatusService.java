@@ -56,7 +56,7 @@ public class OrderStatusService {
     }
 
     public List<OrderStatusHistory> getHistory(UUID orderId) {
-        return historyRepository.findByOrderIdOrderByChangedAtAsc(orderId);
+        return historyRepository.findByOrderIdOrderByCreatedAtAsc(orderId);
     }
 
     public OrderStatus getInitialStatus() {

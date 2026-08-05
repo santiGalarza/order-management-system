@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.order;
 
+import com.santiGalarza.order_management.common.base.Auditable;
 import com.santiGalarza.order_management.order.item.Item;
 import com.santiGalarza.order_management.order.status.OrderStatus;
 import com.santiGalarza.order_management.user.User;
@@ -22,7 +23,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order {
+public class Order extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

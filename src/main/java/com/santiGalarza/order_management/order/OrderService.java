@@ -14,12 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 public class OrderService {
+
+    private static final String ORDER_READ_ALL = "ORDER_READ_ALL";
 
     private final OrderMapper orderMapper;
     private final ItemMapper itemMapper;
@@ -59,9 +62,8 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public OrderResponse getOrder(UUID id){
-        Order order = findOrder(id);
-
+    public OrderResponse getOrder(UUID id) {
+        Order order = resolveOrderForCaller(id, currentUserEmail(), isStaff());
         return orderMapper.toResponseDto(order);
     }
 
@@ -96,9 +98,7 @@ public class OrderService {
     public OrderResponse updateStatus(UUID id, UpdateStatusRequest request) {
         Order order = findOrder(id);
 
-        String email = (String) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
+        String email = currentUserEmail();
         User changedBy = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
 
@@ -107,28 +107,33 @@ public class OrderService {
     }
 
     @Transactional
-    public void deleteOrder(UUID id){
-        findOrder(id);
+    public void deleteOrder(UUID id) {
+        boolean staff = isStaff();
+        Order order = resolveOrderForCaller(id, currentUserEmail(), staff);
+        validateOrderIsModifiable(order, staff);
         orderRepository.deleteById(id);
     }
 
     // Item Class service methods
 
-    public List<ItemResponse> getItems(UUID id){
-        return findOrder(id).getItems()
+    public List<ItemResponse> getItems(UUID id) {
+        Order order = resolveOrderForCaller(id, currentUserEmail(), isStaff());
+        return order.getItems()
                 .stream()
                 .map(itemMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public ItemResponse getItem(UUID id, UUID itemId){
-        return itemMapper.toResponseDto(findItem(id,itemId));
+    public ItemResponse getItem(UUID id, UUID itemId) {
+        resolveOrderForCaller(id, currentUserEmail(), isStaff());
+        return itemMapper.toResponseDto(findItem(id, itemId));
     }
 
     @Transactional
-    public ItemResponse createItem(UUID id, CreateItemRequest request){
-        Order order = findOrder(id);
-        validateOrderIsModifiable(order);
+    public ItemResponse createItem(UUID id, CreateItemRequest request) {
+        boolean staff = isStaff();
+        Order order = resolveOrderForCaller(id, currentUserEmail(), staff);
+        validateOrderIsModifiable(order, staff);
 
         Product product = productService.findProduct(request.getProductId());
         product.deductStock(request.getQuantity());
@@ -141,21 +146,23 @@ public class OrderService {
     }
 
     @Transactional
-    public ItemResponse updateItemQuantity(UUID id, UUID itemId, PatchItemRequest request){
-        Order order = findOrder(id);
-        validateOrderIsModifiable(order);
+    public ItemResponse updateItemQuantity(UUID id, UUID itemId, PatchItemRequest request) {
+        boolean staff = isStaff();
+        Order order = resolveOrderForCaller(id, currentUserEmail(), staff);
+        validateOrderIsModifiable(order, staff);
 
-        Item item = findItem(id,itemId);
+        Item item = findItem(id, itemId);
         item.updateQuantity(request.getQuantity());
         order.recalculateTotalPrice();
         return itemMapper.toResponseDto(itemRepository.save(item));
     }
 
     @Transactional
-    public void deleteItem(UUID id, UUID itemId){
-        Order order = findOrder(id);
-        validateOrderIsModifiable(order);
-        Item item = findItem(id,itemId);
+    public void deleteItem(UUID id, UUID itemId) {
+        boolean staff = isStaff();
+        Order order = resolveOrderForCaller(id, currentUserEmail(), staff);
+        validateOrderIsModifiable(order, staff);
+        Item item = findItem(id, itemId);
         itemRepository.delete(item);
         order.recalculateTotalPrice();
     }
@@ -167,14 +174,35 @@ public class OrderService {
                 .orElseThrow(() -> new OrderNotFoundException(id));
     }
 
-    private Item findItem(UUID id,UUID itemId) {
-        return itemRepository.findByIdAndOrderId(itemId,id)
+    private Item findItem(UUID id, UUID itemId) {
+        return itemRepository.findByIdAndOrderId(itemId, id)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
-    private void validateOrderIsModifiable(Order order) {
-        if (!order.getCurrentStatus().isModifiable()) {
+    private void validateOrderIsModifiable(Order order, boolean isStaff) {
+        if (!isStaff && !order.getCurrentStatus().isModifiable()) {
             throw new OrderNotModifiableException(order.getId());
         }
+    }
+
+    private Order resolveOrderForCaller(UUID id, String callerEmail, boolean isStaff) {
+        Optional<Order> order = isStaff
+                ? orderRepository.findById(id)
+                : orderRepository.findByIdAndUser_Email(id, callerEmail);
+        return order.orElseThrow(() -> new OrderNotFoundException(id));
+    }
+
+    private String currentUserEmail() {
+        return (String) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+    }
+
+    private boolean isStaff() {
+        return SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals(ORDER_READ_ALL));
     }
 }

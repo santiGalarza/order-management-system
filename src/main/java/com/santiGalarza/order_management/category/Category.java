@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.category;
 
+import com.santiGalarza.order_management.common.base.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -19,7 +20,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category {
+public class Category extends Auditable {
 
     @Id
     @GeneratedValue

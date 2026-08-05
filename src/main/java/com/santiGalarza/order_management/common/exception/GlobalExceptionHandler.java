@@ -5,6 +5,7 @@ import com.santiGalarza.order_management.security.InvalidPasswordException;
 import com.santiGalarza.order_management.security.InvalidRefreshTokenException;
 import com.santiGalarza.order_management.security.RefreshTokenReusedException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,12 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
 
         return build(HttpStatus.BAD_REQUEST, "Validation Failed", errors, req);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ProblemDetail> handleDataIntegrityViolationException(
+            DataIntegrityViolationException e, HttpServletRequest req) {
+        return build(HttpStatus.CONFLICT, "Data Integrity Violation", e.getMessage(), req);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)

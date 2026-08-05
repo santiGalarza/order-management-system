@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class PatchProductRequest {
 
-    @NotBlank
     private String name;
 
     @Digits(integer = 8, fraction = 2)
@@ -32,4 +32,6 @@ public class PatchProductRequest {
 
     @Positive
     private Float weight;
+
+    private UUID categoryId;
 }
