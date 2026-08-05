@@ -332,3 +332,291 @@ Content-Type: application/json
     }
   ]
 }
+
+
+### ----------------------------------------------------------------
+### CATEGORIES
+### Permissions (confirmed from role_permissions seed):
+###   READ           -> USER, EMPLOYEE, ADMIN
+###   CREATE/UPDATE  -> EMPLOYEE, ADMIN (not USER)
+###   DELETE         -> ADMIN only (not EMPLOYEE, not USER)
+### ----------------------------------------------------------------
+
+### Get all categories — as customer, expect 200
+GET {{baseUrl}}/api/v1/categories
+Authorization: Bearer {{customerToken}}
+
+### Get category by id (Electronics, seeded) — as customer, expect 200
+GET {{baseUrl}}/api/v1/categories/ea3471b1-2b04-4e1e-ba85-ffad451c2fb4
+Authorization: Bearer {{customerToken}}
+
+### Get category by id — nonexistent, expect 404 not 500
+GET {{baseUrl}}/api/v1/categories/ffffffff-ffff-ffff-ffff-ffffffffffff
+Authorization: Bearer {{customerToken}}
+
+### Create a top-level category — as ADMIN, expect 201
+# @name createParentCategory
+POST {{baseUrl}}/api/v1/categories
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Books",
+  "description": "Printed and digital books",
+  "isActive": true
+}
+
+> {%
+    client.global.set("parentCategoryId", response.body.id);
+%}
+
+### Create a child category under it — as ADMIN, expect 201
+# @name createChildCategory
+POST {{baseUrl}}/api/v1/categories
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Fiction",
+  "description": "Novels and short stories",
+  "parentCategoryId": "{{parentCategoryId}}",
+  "isActive": true
+}
+
+> {%
+    client.global.set("childCategoryId", response.body.id);
+%}
+
+### Create a category — as CUSTOMER (not admin/employee), expect 403
+POST {{baseUrl}}/api/v1/categories
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "name": "Should Not Be Created",
+  "isActive": true
+}
+
+### Create a category — missing required name, expect 400
+POST {{baseUrl}}/api/v1/categories
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "description": "No name provided",
+  "isActive": true
+}
+
+### Create a category with a nonexistent parentCategoryId — expect 400/404, not 500
+POST {{baseUrl}}/api/v1/categories
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Orphan Category",
+  "parentCategoryId": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+  "isActive": true
+}
+
+### Replace category (full update, PUT) — as ADMIN
+PUT {{baseUrl}}/api/v1/categories/{{childCategoryId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Fiction & Literature",
+  "description": "Novels, short stories, poetry",
+  "parentCategoryId": "{{parentCategoryId}}",
+  "isActive": true
+}
+
+### Patch category (partial update) — as ADMIN
+PATCH {{baseUrl}}/api/v1/categories/{{childCategoryId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "description": "Updated via PATCH"
+}
+
+### Update a category — as EMPLOYEE, expect 200 (EMPLOYEE has CATEGORY_UPDATE)
+PATCH {{baseUrl}}/api/v1/categories/{{childCategoryId}}
+Authorization: Bearer {{employeeToken}}
+Content-Type: application/json
+
+{
+  "description": "Touched by employee"
+}
+
+### Delete a category — as EMPLOYEE, expect 403 (CATEGORY_DELETE is ADMIN only, unlike create/update)
+DELETE {{baseUrl}}/api/v1/categories/{{childCategoryId}}
+Authorization: Bearer {{employeeToken}}
+
+### Delete the child category (no products attached) — as ADMIN, expect 204
+DELETE {{baseUrl}}/api/v1/categories/{{childCategoryId}}
+Authorization: Bearer {{adminToken}}
+
+### Delete a category that still has products assigned (Electronics) — expect 400/409, not 500
+DELETE {{baseUrl}}/api/v1/categories/ea3471b1-2b04-4e1e-ba85-ffad451c2fb4
+Authorization: Bearer {{adminToken}}
+
+### Delete a category — as CUSTOMER, expect 403
+DELETE {{baseUrl}}/api/v1/categories/{{parentCategoryId}}
+Authorization: Bearer {{customerToken}}
+
+### No token at all — expect 401
+GET {{baseUrl}}/api/v1/categories
+
+
+### ----------------------------------------------------------------
+### PRODUCTS
+### Permissions (confirmed from role_permissions seed):
+###   READ           -> USER, EMPLOYEE, ADMIN
+###   CREATE/UPDATE  -> EMPLOYEE, ADMIN (not USER)
+###   DELETE         -> ADMIN only (not EMPLOYEE, not USER)
+### ----------------------------------------------------------------
+
+### Get all products — as customer, expect 200
+GET {{baseUrl}}/api/v1/products
+Authorization: Bearer {{customerToken}}
+
+### Get product by id (Wireless Mouse, seeded) — as customer, expect 200
+GET {{baseUrl}}/api/v1/products/a1bcc21d-cc6d-47a1-8e89-ba7830cd3014
+Authorization: Bearer {{customerToken}}
+
+### Get product by id — nonexistent, expect 404 not 500
+GET {{baseUrl}}/api/v1/products/ffffffff-ffff-ffff-ffff-ffffffffffff
+Authorization: Bearer {{customerToken}}
+
+### Create a product under Phones category — as ADMIN, expect 201
+# @name createProduct
+POST {{baseUrl}}/api/v1/products
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Bluetooth Earbuds",
+  "price": 29.99,
+  "sku": "SKU00000006",
+  "isActive": true,
+  "minOrderQuantity": 1,
+  "stockQuantity": 100,
+  "weight": 0.05,
+  "categoryId": "17f828b1-dd52-43e8-96aa-ed97d3297d90"
+}
+
+> {%
+    client.global.set("newProductId", response.body.id);
+%}
+
+### Create a product — as CUSTOMER (not admin/employee), expect 403
+POST {{baseUrl}}/api/v1/products
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "name": "Should Not Be Created",
+  "price": 1.00,
+  "sku": "SKU00000007",
+  "isActive": true,
+  "minOrderQuantity": 1,
+  "stockQuantity": 1,
+  "weight": 0.1,
+  "categoryId": "17f828b1-dd52-43e8-96aa-ed97d3297d90"
+}
+
+### Create a product with a nonexistent categoryId — expect 400/404, not 500
+POST {{baseUrl}}/api/v1/products
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Orphan Product",
+  "price": 9.99,
+  "sku": "SKU00000008",
+  "isActive": true,
+  "minOrderQuantity": 1,
+  "stockQuantity": 10,
+  "weight": 0.2,
+  "categoryId": "ffffffff-ffff-ffff-ffff-ffffffffffff"
+}
+
+### Create a product with missing categoryId (mandatory) — expect 400
+POST {{baseUrl}}/api/v1/products
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "No Category Product",
+  "price": 9.99,
+  "sku": "SKU00000009",
+  "isActive": true,
+  "minOrderQuantity": 1,
+  "stockQuantity": 10,
+  "weight": 0.2
+}
+
+### Create a product with an invalid sku (too short, min size 8) — expect 400
+POST {{baseUrl}}/api/v1/products
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Bad Sku Product",
+  "price": 9.99,
+  "sku": "SHORT",
+  "isActive": true,
+  "minOrderQuantity": 1,
+  "stockQuantity": 10,
+  "weight": 0.2,
+  "categoryId": "17f828b1-dd52-43e8-96aa-ed97d3297d90"
+}
+
+### Replace product (full update, PUT) — moves it to Electronics — as ADMIN
+PUT {{baseUrl}}/api/v1/products/{{newProductId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Bluetooth Earbuds Pro",
+  "price": 34.99,
+  "isActive": true,
+  "minOrderQuantity": 1,
+  "stockQuantity": 90,
+  "weight": 0.06,
+  "categoryId": "ea3471b1-2b04-4e1e-ba85-ffad451c2fb4"
+}
+
+### Patch product (partial update — name is still required by PatchProductRequest) — as ADMIN
+PATCH {{baseUrl}}/api/v1/products/{{newProductId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Bluetooth Earbuds Pro",
+  "stockQuantity": 75
+}
+
+### Patch product — omitting required name, expect 400
+PATCH {{baseUrl}}/api/v1/products/{{newProductId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "stockQuantity": 60
+}
+
+### Delete a product — as EMPLOYEE, expect 403 (PRODUCT_DELETE is ADMIN only, unlike create/update)
+DELETE {{baseUrl}}/api/v1/products/{{newProductId}}
+Authorization: Bearer {{employeeToken}}
+
+### Delete the product we created — as ADMIN, expect 204
+DELETE {{baseUrl}}/api/v1/products/{{newProductId}}
+Authorization: Bearer {{adminToken}}
+
+### Delete a product — as CUSTOMER, expect 403
+DELETE {{baseUrl}}/api/v1/products/a1bcc21d-cc6d-47a1-8e89-ba7830cd3014
+Authorization: Bearer {{customerToken}}
+
+### No token at all — expect 401
+GET {{baseUrl}}/api/v1/products

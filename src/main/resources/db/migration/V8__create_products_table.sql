@@ -8,5 +8,6 @@ CREATE TABLE products (
     weight REAL NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now(),
-    is_active BOOLEAN NOT NULL DEFAULT true
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    category_id UUID NOT NULL REFERENCES categories(id)
 );
