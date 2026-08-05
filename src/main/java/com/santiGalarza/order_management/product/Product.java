@@ -1,5 +1,7 @@
 package com.santiGalarza.order_management.product;
 
+import com.santiGalarza.order_management.category.Category;
+import com.santiGalarza.order_management.common.base.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -17,7 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Product {
+public class Product extends Auditable {
 
     @Id
     @GeneratedValue
@@ -32,7 +34,6 @@ public class Product {
     private BigDecimal price;
 
     @Column(unique = true, nullable = false, updatable = false)
-    @Setter(AccessLevel.NONE)
     @Size(min = 8, max = 12)
     @NotEmpty
     private String sku;
@@ -52,8 +53,11 @@ public class Product {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private boolean isActive;
 
