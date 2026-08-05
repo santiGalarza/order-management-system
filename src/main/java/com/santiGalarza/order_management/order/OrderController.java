@@ -68,7 +68,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}/items")
-    @RequiresPermission.OrderReadAll
+    @RequiresPermission.OrderRead
     public ResponseEntity<List<ItemResponse>> getItems(@PathVariable UUID id) {
         return ResponseEntity.ok(orderService.getItems(id));
     }
