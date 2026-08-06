@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.category;
+package com.santiGalarza.order_management.category.exception;
 
 import com.santiGalarza.order_management.common.exception.ResourceNotFoundException;
 

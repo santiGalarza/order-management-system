@@ -1,5 +1,11 @@
 package com.santiGalarza.order_management.category;
 
+import com.santiGalarza.order_management.category.dto.CreateCategoryRequest;
+import com.santiGalarza.order_management.category.dto.PatchCategoryRequest;
+import com.santiGalarza.order_management.category.dto.UpdateCategoryRequest;
+import com.santiGalarza.order_management.category.exception.CategoryNotFoundException;
+
+import com.santiGalarza.order_management.category.dto.CategoryResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

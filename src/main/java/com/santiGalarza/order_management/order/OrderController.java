@@ -1,10 +1,12 @@
 package com.santiGalarza.order_management.order;
 
+import com.santiGalarza.order_management.order.dto.CreateOrderRequest;
+import com.santiGalarza.order_management.order.dto.OrderResponse;
 import com.santiGalarza.order_management.security.RequiresPermission;
-import com.santiGalarza.order_management.order.item.CreateItemRequest;
-import com.santiGalarza.order_management.order.item.ItemResponse;
-import com.santiGalarza.order_management.order.item.PatchItemRequest;
-import com.santiGalarza.order_management.order.status.UpdateStatusRequest;
+import com.santiGalarza.order_management.order.item.dto.CreateItemRequest;
+import com.santiGalarza.order_management.order.item.dto.ItemResponse;
+import com.santiGalarza.order_management.order.item.dto.PatchItemRequest;
+import com.santiGalarza.order_management.order.status.dto.UpdateStatusRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;

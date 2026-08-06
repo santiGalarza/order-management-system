@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.category;
+package com.santiGalarza.order_management.category.dto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

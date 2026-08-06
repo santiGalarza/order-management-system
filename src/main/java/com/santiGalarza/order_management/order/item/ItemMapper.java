@@ -1,5 +1,7 @@
 package com.santiGalarza.order_management.order.item;
 
+import com.santiGalarza.order_management.order.item.dto.CreateItemRequest;
+import com.santiGalarza.order_management.order.item.dto.ItemResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.category;
+package com.santiGalarza.order_management.category.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

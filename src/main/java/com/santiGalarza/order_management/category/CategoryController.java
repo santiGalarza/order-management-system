@@ -1,5 +1,9 @@
 package com.santiGalarza.order_management.category;
 
+import com.santiGalarza.order_management.category.dto.CategoryResponse;
+import com.santiGalarza.order_management.category.dto.CreateCategoryRequest;
+import com.santiGalarza.order_management.category.dto.PatchCategoryRequest;
+import com.santiGalarza.order_management.category.dto.UpdateCategoryRequest;
 import jakarta.validation.Valid;
 
 import com.santiGalarza.order_management.security.RequiresPermission;

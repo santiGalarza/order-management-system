@@ -1,6 +1,7 @@
 package com.santiGalarza.order_management.order;
 
-import com.santiGalarza.order_management.order.item.ItemMapper;
+import com.santiGalarza.order_management.order.dto.CreateOrderRequest;
+import com.santiGalarza.order_management.order.dto.OrderResponse;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")

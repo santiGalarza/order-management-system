@@ -1,7 +1,9 @@
 package com.santiGalarza.order_management.order.status;
 
-import com.santiGalarza.order_management.order.MaxDeliveryAttemptsExceededException;
+import com.santiGalarza.order_management.order.exception.MaxDeliveryAttemptsExceededException;
 import com.santiGalarza.order_management.order.Order;
+import com.santiGalarza.order_management.order.status.exception.InvalidOrderStatusTransitionException;
+import com.santiGalarza.order_management.order.status.exception.OrderStatusNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
