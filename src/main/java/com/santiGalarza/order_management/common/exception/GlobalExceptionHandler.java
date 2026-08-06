@@ -1,9 +1,9 @@
 package com.santiGalarza.order_management.common.exception;
 
-import com.santiGalarza.order_management.order.status.InvalidOrderStatusTransitionException;
-import com.santiGalarza.order_management.security.InvalidPasswordException;
-import com.santiGalarza.order_management.security.InvalidRefreshTokenException;
-import com.santiGalarza.order_management.security.RefreshTokenReusedException;
+import com.santiGalarza.order_management.order.status.exception.InvalidOrderStatusTransitionException;
+import com.santiGalarza.order_management.security.auth.exception.InvalidPasswordException;
+import com.santiGalarza.order_management.security.token.exception.InvalidRefreshTokenException;
+import com.santiGalarza.order_management.security.token.exception.RefreshTokenReusedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

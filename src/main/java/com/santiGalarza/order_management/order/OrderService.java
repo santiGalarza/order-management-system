@@ -1,12 +1,20 @@
 package com.santiGalarza.order_management.order;
 
+import com.santiGalarza.order_management.order.dto.CreateOrderRequest;
+import com.santiGalarza.order_management.order.dto.OrderResponse;
+import com.santiGalarza.order_management.order.exception.OrderNotFoundException;
+import com.santiGalarza.order_management.order.exception.OrderNotModifiableException;
 import com.santiGalarza.order_management.order.item.*;
+import com.santiGalarza.order_management.order.item.dto.CreateItemRequest;
+import com.santiGalarza.order_management.order.item.dto.ItemResponse;
+import com.santiGalarza.order_management.order.item.dto.PatchItemRequest;
+import com.santiGalarza.order_management.order.item.exception.ItemNotFoundException;
 import com.santiGalarza.order_management.order.status.OrderStatusService;
-import com.santiGalarza.order_management.order.status.UpdateStatusRequest;
+import com.santiGalarza.order_management.order.status.dto.UpdateStatusRequest;
 import com.santiGalarza.order_management.product.Product;
 import com.santiGalarza.order_management.product.ProductService;
 import com.santiGalarza.order_management.user.User;
-import com.santiGalarza.order_management.user.UserNotFoundException;
+import com.santiGalarza.order_management.user.exception.UserNotFoundException;
 import com.santiGalarza.order_management.user.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.security.token;
 
+import com.santiGalarza.order_management.security.token.dto.RefreshTokenData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;

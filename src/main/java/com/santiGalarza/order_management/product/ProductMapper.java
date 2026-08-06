@@ -1,5 +1,9 @@
 package com.santiGalarza.order_management.product;
 
+import com.santiGalarza.order_management.product.dto.CreateProductRequest;
+import com.santiGalarza.order_management.product.dto.PatchProductRequest;
+import com.santiGalarza.order_management.product.dto.ProductResponse;
+import com.santiGalarza.order_management.product.dto.UpdateProductRequest;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")

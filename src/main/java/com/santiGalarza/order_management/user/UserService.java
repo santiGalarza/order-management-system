@@ -1,6 +1,10 @@
 package com.santiGalarza.order_management.user;
 
 import com.santiGalarza.order_management.user.dto.*;
+import com.santiGalarza.order_management.user.exception.UserNotFoundException;
+import com.santiGalarza.order_management.user.role.Role;
+import com.santiGalarza.order_management.user.role.RoleRepository;
+import com.santiGalarza.order_management.user.role.exception.RoleNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
