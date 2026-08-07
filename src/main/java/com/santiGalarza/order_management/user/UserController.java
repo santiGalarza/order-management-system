@@ -80,12 +80,13 @@ public class UserController {
         return ResponseEntity.ok(userService.patchMe(email, request));
     }
 
-    @DeleteMapping("/{id}/roles")
+    @DeleteMapping("/{id}/roles/{roleName}")
     @RequiresPermission.UserAssignRole
-    public ResponseEntity<UserResponse> revokeRole(
+    public ResponseEntity<Void> revokeRole(
             @PathVariable UUID id,
-            @Valid @RequestBody AssignRoleRequest request) {
-        return ResponseEntity.ok(userService.revokeRole(id, request));
+            @PathVariable String roleName) {
+        userService.revokeRole(id, roleName);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{id}")

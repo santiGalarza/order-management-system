@@ -1,7 +1,7 @@
 package com.santiGalarza.order_management.product;
 
 import com.santiGalarza.order_management.category.Category;
-import com.santiGalarza.order_management.category.CategoryNotFoundException;
+import com.santiGalarza.order_management.category.exception.CategoryNotFoundException;
 import com.santiGalarza.order_management.category.CategoryRepository;
 import com.santiGalarza.order_management.product.dto.CreateProductRequest;
 import com.santiGalarza.order_management.product.dto.PatchProductRequest;
