@@ -27,16 +27,18 @@ Backend para la gestión de productos, categorías y órdenes de compra, con aut
 
 ## Funcionalidades
 
-- Autenticar usuarios con JWT
-- Rotar refresh tokens automáticamente, con detección de reuso
-- Almacenar sesiones en Redis
-- Autorizar acceso por rol
-- Autorizar acceso por permiso
-- Restringir el acceso y modificación de órdenes al propietario del recurso
-- Containerizar el entorno con Docker Compose
-- Versionar el esquema de base de datos con Flyway
-- Registrar el historial de estados de las órdenes
-- Organizar las categorías jerárquicamente
+- Autenticación JWT (Access + Refresh Tokens)
+- Rotación de Refresh Tokens con detección de reuso
+- Refresh Tokens hasheados en Redis
+- Control de acceso basado en roles (RBAC)
+- Autorización basada en permisos
+- Owner Scoping de recursos
+- Gestión de Productos, Categorías y Órdenes
+- Categorías jerárquicas
+- Historial de estados de órdenes
+- Migraciones de base de datos con Flyway
+- Entorno reproducible con Docker Compose
+- Documentación OpenAPI (SpringDoc + ReDoc)
 
 ## ¿Por Qué Este Proyecto?
 
@@ -64,20 +66,25 @@ Este proyecto nació como una forma de profundizar conceptos utilizados en aplic
 
 ## Stack Tecnológico
 
-| Categoría      | Tecnología           |
-|----------------|------------------------|
-| Lenguaje       | Java 21               |
-| Framework      | Spring Boot 4         |
-| Base de datos  | PostgreSQL            |
-| Cache          | Redis                 |
-| Migraciones    | Flyway                |
-| Contenedores   | Docker Compose        |
-| Seguridad      | JWT                   |
-| Mapeo          | MapStruct             |
+| Categoría      | Tecnología                 |
+|----------------|------------------------------|
+| Lenguaje       | Java 21                     |
+| Framework      | Spring Boot 4               |
+| Base de datos  | PostgreSQL                  |
+| Cache          | Redis                       |
+| Migraciones    | Flyway                      |
+| Contenedores   | Docker Compose               |
+| Seguridad      | JWT                          |
+| Mapeo          | MapStruct                    |
+| Documentación  | SpringDoc OpenAPI + ReDoc     |
 
 ## API
 
-REST API organizada por recursos:
+La API está documentada con SpringDoc OpenAPI y publicada mediante ReDoc en GitHub Pages.
+
+📖 **Documentación:** https://santigalarza.github.io/order-management-system/
+
+### Recursos
 
 - `/auth`
 - `/users`
@@ -90,7 +97,7 @@ REST API organizada por recursos:
 ```
 src/main/java
 └── com.santiGalarza.ordermanagement
-    ├── auth
+    ├── security
     ├── user
     ├── order
     ├── product
@@ -107,7 +114,7 @@ src/main/java
 
 ## Cómo Correrlo Localmente
 
-Todo está containerizado.
+La aplicación está completamente containerizada.
 
 ```bash
 git clone <repo-url>
@@ -137,7 +144,7 @@ Para correrlo: abrir `requests.http` en IntelliJ/WebStorm con el plugin HTTP Cli
 - [x] Redis
 - [x] Docker Compose
 - [x] Flyway
+- [x] Documentación de la API con SpringDoc OpenAPI y ReDoc
 - [ ] Tests unitarios (JUnit + Mockito)
-- [ ] Documentación OpenAPI / Swagger
 - [ ] CI con GitHub Actions
 - [ ] Observabilidad con Spring Boot Actuator

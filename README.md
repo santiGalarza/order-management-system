@@ -11,7 +11,7 @@
 
 A backend for managing products, categories, and purchase orders, with JWT authentication, role and permission based authorization, and per user data ownership. Built with Spring Boot 4 and Java 21.
 
-## Index
+## Table of Contents
 
 - [Features](#features)
 - [API](#api)
@@ -27,16 +27,18 @@ A backend for managing products, categories, and purchase orders, with JWT authe
 
 ## Features
 
-- Authenticate users with JWT
-- Rotate refresh tokens automatically, with reuse detection
-- Store sessions in Redis
-- Authorize access by role
-- Authorize access by permission
-- Scope order access and modification to the resource owner
-- Containerize the environment with Docker Compose
-- Version the database schema with Flyway
-- Track order status history
-- Organize categories hierarchically
+- JWT Authentication (Access + Refresh Tokens)
+- Refresh Token Rotation with Reuse Detection
+- Hashed Refresh Tokens stored in Redis
+- Role-Based Access Control (RBAC)
+- Permission-Based Authorization
+- Resource Owner Scoping
+- Product, Category and Order Management
+- Hierarchical Categories
+- Order Status History
+- Flyway Database Migrations
+- Docker Compose Environment
+- OpenAPI Documentation (SpringDoc + ReDoc)
 
 ## Why This Project
 
@@ -64,20 +66,25 @@ This project started as a way to go deeper into concepts used in real backend ap
 
 ## Tech Stack
 
-| Category      | Technology         |
-|----------------|---------------------|
-| Language       | Java 21             |
-| Framework      | Spring Boot 4       |
-| Database       | PostgreSQL          |
-| Cache          | Redis               |
-| Migrations     | Flyway              |
-| Containers     | Docker Compose      |
-| Security       | JWT                 |
-| Mapping        | MapStruct           |
+| Category      | Technology                 |
+|----------------|------------------------------|
+| Language       | Java 21                     |
+| Framework      | Spring Boot 4               |
+| Database       | PostgreSQL                  |
+| Cache          | Redis                       |
+| Migrations     | Flyway                       |
+| Containers     | Docker Compose                |
+| Security       | JWT                           |
+| Mapping        | MapStruct                     |
+| Documentation  | SpringDoc OpenAPI + ReDoc       |
 
 ## API
 
-REST API organized by resource:
+The API is documented with SpringDoc OpenAPI and published via ReDoc on GitHub Pages.
+
+📖 **Documentation:** https://santigalarza.github.io/order-management-system/
+
+### Resources
 
 - `/auth`
 - `/users`
@@ -90,7 +97,7 @@ REST API organized by resource:
 ```
 src/main/java
 └── com.santiGalarza.ordermanagement
-    ├── auth
+    ├── security
     ├── user
     ├── order
     ├── product
@@ -107,7 +114,7 @@ src/main/java
 
 ## Running Locally
 
-Everything is containerized.
+The application is fully containerized.
 
 ```bash
 git clone <repo-url>
@@ -120,7 +127,7 @@ This spins up Postgres, Redis, and the app (multi-stage build, non-root runtime 
 
 ## Testing the API
 
-There is no JUnit/Mockito suite yet (a deliberate time tradeoff for this stage of the project). Instead, `requests.http` (IntelliJ HTTP Client format) covers Auth, Users, Orders (with items and status transitions), Categories, and Products end to end, including negative paths: wrong password, missing token, nonexistent resource, invalid status transitions, and permission boundaries per role.
+There is no JUnit/Mockito suite yet. Instead, `requests.http` (IntelliJ HTTP Client format) covers Auth, Users, Orders (with items and status transitions), Categories, and Products end to end, including negative paths: wrong password, missing token, nonexistent resource, invalid status transitions, and permission boundaries per role.
 
 To run it: open `requests.http` in IntelliJ/WebStorm with the HTTP Client plugin, run the login requests first (they chain the resulting token into subsequent requests via `client.global.set(...)`), then run the rest in order.
 
@@ -137,7 +144,7 @@ To run it: open `requests.http` in IntelliJ/WebStorm with the HTTP Client plugin
 - [x] Redis
 - [x] Docker Compose
 - [x] Flyway
-- [ ] Unit testing with JUnit and Mockito
-- [ ] OpenAPI / Swagger documentation
+- [x] API documentation with SpringDoc OpenAPI and ReDoc
+- [ ] Unit tests (JUnit + Mockito)
 - [ ] CI with GitHub Actions
-- [ ] Monitoring with Spring Boot Actuator
+- [ ] Observability with Spring Boot Actuator
