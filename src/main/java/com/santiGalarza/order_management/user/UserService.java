@@ -84,10 +84,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse revokeRole(UUID id, AssignRoleRequest request) {
+    public void revokeRole(UUID id, String roleName) {
         User user = findById(id);
-        user.getRoles().remove(findRoleByName(request.getRoleName()));
-        return userMapper.toResponseDto(userRepository.save(user));
+        user.getRoles().remove(findRoleByName(roleName));
     }
 
     @Transactional
