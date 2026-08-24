@@ -78,4 +78,18 @@ public class Product extends Auditable {
     public void restoreStock(int quantity) {
         this.stockQuantity += quantity;
     }
+
+    public static Product create(String name, BigDecimal price, String sku, int minOrderQuantity,
+                                 int stockQuantity, float weight, Category category, boolean isActive) {
+        Product product = new Product();
+        product.name = name;
+        product.price = price;
+        product.sku = sku;
+        product.minOrderQuantity = minOrderQuantity;
+        product.stockQuantity = stockQuantity;
+        product.weight = weight;
+        product.category = category;
+        product.isActive = isActive;
+        return product;
+    }
 }

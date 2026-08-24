@@ -61,4 +61,13 @@ public class Order extends Auditable {
                         .multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public static Order create(BigDecimal totalPrice, OrderStatus currentStatus, List<Item> items, User user) {
+        Order order = new Order();
+        order.totalPrice = totalPrice;
+        order.currentStatus = currentStatus;
+        order.items = items;
+        order.user = user;
+        return order;
+    }
 }
