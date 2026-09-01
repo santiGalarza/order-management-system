@@ -1,9 +1,9 @@
-package com.santiGalarza.order_management.order;
+package com.santiGalarza.order_management.order.core;
 
-import com.santiGalarza.order_management.order.dto.CreateOrderRequest;
-import com.santiGalarza.order_management.order.dto.OrderResponse;
-import com.santiGalarza.order_management.order.exception.OrderNotFoundException;
-import com.santiGalarza.order_management.order.exception.OrderNotModifiableException;
+import com.santiGalarza.order_management.order.core.dto.CreateOrderRequest;
+import com.santiGalarza.order_management.order.core.dto.OrderResponse;
+import com.santiGalarza.order_management.order.core.exception.OrderNotFoundException;
+import com.santiGalarza.order_management.order.core.exception.OrderNotModifiableException;
 import com.santiGalarza.order_management.order.item.*;
 import com.santiGalarza.order_management.order.item.dto.CreateItemRequest;
 import com.santiGalarza.order_management.order.item.dto.ItemResponse;

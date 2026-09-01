@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.order.exception;
+package com.santiGalarza.order_management.order.core.exception;
 
 import com.santiGalarza.order_management.common.exception.ConflictException;
 

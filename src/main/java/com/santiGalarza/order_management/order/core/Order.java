@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.order;
+package com.santiGalarza.order_management.order.core;
 
 import com.santiGalarza.order_management.common.base.Auditable;
 import com.santiGalarza.order_management.order.item.Item;

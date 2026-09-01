@@ -1,6 +1,6 @@
 package com.santiGalarza.order_management.order.status;
 
-import com.santiGalarza.order_management.order.Order;
+import com.santiGalarza.order_management.order.core.Order;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

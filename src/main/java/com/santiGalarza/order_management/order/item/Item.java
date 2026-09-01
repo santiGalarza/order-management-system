@@ -1,6 +1,6 @@
 package com.santiGalarza.order_management.order.item;
 
-import com.santiGalarza.order_management.order.Order;
+import com.santiGalarza.order_management.order.core.Order;
 import com.santiGalarza.order_management.product.Product;
 
 import jakarta.persistence.*;

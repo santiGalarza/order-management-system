@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.order;
 
+import com.santiGalarza.order_management.order.core.Order;
 import com.santiGalarza.order_management.order.item.Item;
 import com.santiGalarza.order_management.product.Product;
 import org.junit.jupiter.api.BeforeEach;
