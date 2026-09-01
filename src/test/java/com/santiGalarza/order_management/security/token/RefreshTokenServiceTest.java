@@ -1,8 +1,5 @@
-package com.santiGalarza.order_management;
+package com.santiGalarza.order_management.security.token;
 
-import com.santiGalarza.order_management.security.token.RefreshTokenRepository;
-import com.santiGalarza.order_management.security.token.RefreshTokenReusePolicy;
-import com.santiGalarza.order_management.security.token.RefreshTokenService;
 import com.santiGalarza.order_management.security.token.dto.RefreshTokenData;
 import com.santiGalarza.order_management.security.token.exception.InvalidRefreshTokenException;
 import com.santiGalarza.order_management.security.token.exception.RefreshTokenReusedException;

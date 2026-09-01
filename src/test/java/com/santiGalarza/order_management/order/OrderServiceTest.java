@@ -1,9 +1,5 @@
-package com.santiGalarza.order_management;
+package com.santiGalarza.order_management.order;
 
-import com.santiGalarza.order_management.order.Order;
-import com.santiGalarza.order_management.order.OrderMapper;
-import com.santiGalarza.order_management.order.OrderRepository;
-import com.santiGalarza.order_management.order.OrderService;
 import com.santiGalarza.order_management.order.dto.CreateOrderRequest;
 import com.santiGalarza.order_management.order.dto.OrderResponse;
 import com.santiGalarza.order_management.order.exception.OrderNotFoundException;

@@ -1,6 +1,5 @@
-package com.santiGalarza.order_management;
+package com.santiGalarza.order_management.product;
 
-import com.santiGalarza.order_management.product.Product;
 import com.santiGalarza.order_management.product.exception.InsufficientStockException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

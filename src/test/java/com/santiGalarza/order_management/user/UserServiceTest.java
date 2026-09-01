@@ -1,10 +1,6 @@
-package com.santiGalarza.order_management;
+package com.santiGalarza.order_management.user;
 
 import com.santiGalarza.order_management.security.token.RefreshTokenService;
-import com.santiGalarza.order_management.user.User;
-import com.santiGalarza.order_management.user.UserMapper;
-import com.santiGalarza.order_management.user.UserRepository;
-import com.santiGalarza.order_management.user.UserService;
 import com.santiGalarza.order_management.user.dto.*;
 import com.santiGalarza.order_management.user.exception.UserNotFoundException;
 import com.santiGalarza.order_management.user.role.Role;

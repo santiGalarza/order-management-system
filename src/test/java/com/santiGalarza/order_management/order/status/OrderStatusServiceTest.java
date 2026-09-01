@@ -1,9 +1,5 @@
-package com.santiGalarza.order_management;
+package com.santiGalarza.order_management.order.status;
 
-import com.santiGalarza.order_management.order.status.OrderStatusHistoryRepository;
-import com.santiGalarza.order_management.order.status.OrderStatusRepository;
-import com.santiGalarza.order_management.order.status.OrderStatusService;
-import com.santiGalarza.order_management.order.status.OrderStatusTransitionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

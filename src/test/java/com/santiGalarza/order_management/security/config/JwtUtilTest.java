@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management;
+package com.santiGalarza.order_management.security.config;
 
 import com.santiGalarza.order_management.security.JwtUtil;
 import com.santiGalarza.order_management.user.User;
