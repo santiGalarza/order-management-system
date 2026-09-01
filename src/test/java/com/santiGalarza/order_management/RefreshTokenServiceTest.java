@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -41,6 +42,7 @@ public class RefreshTokenServiceTest {
     @BeforeEach
     void setUp() {
         user = User.of("test@email.com","password" ,"First Name" ,"Last Name" );
+        user.setId(UUID.randomUUID());
     }
 
     @Nested
