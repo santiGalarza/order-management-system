@@ -1,6 +1,5 @@
 package com.santiGalarza.order_management.security.config;
 
-import com.santiGalarza.order_management.security.JwtUtil;
 import com.santiGalarza.order_management.user.User;
 import com.santiGalarza.order_management.user.role.Permission;
 import com.santiGalarza.order_management.user.role.Role;

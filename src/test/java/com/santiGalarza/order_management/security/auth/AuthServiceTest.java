@@ -1,6 +1,6 @@
 package com.santiGalarza.order_management.security.auth;
 
-import com.santiGalarza.order_management.security.JwtUtil;
+import com.santiGalarza.order_management.security.config.JwtUtil;
 import com.santiGalarza.order_management.security.auth.dto.AuthResponse;
 import com.santiGalarza.order_management.security.auth.dto.LoginRequest;
 import com.santiGalarza.order_management.security.auth.dto.RegisterRequest;

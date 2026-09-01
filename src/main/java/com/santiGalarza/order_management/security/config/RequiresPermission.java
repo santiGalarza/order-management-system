@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.security;
+package com.santiGalarza.order_management.security.config;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

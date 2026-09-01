@@ -6,7 +6,7 @@ import com.santiGalarza.order_management.product.dto.ProductResponse;
 import com.santiGalarza.order_management.product.dto.UpdateProductRequest;
 import jakarta.validation.Valid;
 
-import com.santiGalarza.order_management.security.RequiresPermission;
+import com.santiGalarza.order_management.security.config.RequiresPermission;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.security;
+package com.santiGalarza.order_management.security.config;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
