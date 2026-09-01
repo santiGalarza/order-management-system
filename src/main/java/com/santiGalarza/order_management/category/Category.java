@@ -47,4 +47,13 @@ public class Category extends Auditable {
     public boolean isRootCategory() {
         return parentCategory == null;
     }
+
+    public static Category create(String name, String description, boolean isActive, Category parentCategory) {
+        Category category = new Category();
+        category.setName(name);
+        category.setDescription(description);
+        category.setActive(isActive);
+        category.setParentCategory(parentCategory);
+        return category;
+    }
 }
