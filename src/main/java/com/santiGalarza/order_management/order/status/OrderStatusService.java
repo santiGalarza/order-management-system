@@ -62,7 +62,7 @@ public class OrderStatusService {
     }
 
     public OrderStatus getInitialStatus() {
-        return statusRepository.findByIsInitialTrue()
+        return statusRepository.findByInitialTrue()
                 .orElseThrow(() -> new IllegalStateException("No initial status configured"));
     }
 
