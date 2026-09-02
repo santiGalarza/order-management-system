@@ -44,4 +44,14 @@ public class OrderStatus {
     public String getMetadata(String key) {
         return metadata != null ? metadata.get(key) : null;
     }
+
+    public static OrderStatus create(String code, String label, boolean isInitial, boolean isFinal, boolean isModifiable) {
+        OrderStatus orderStatus = new OrderStatus();
+        orderStatus.setCode(code);
+        orderStatus.setLabel(label);
+        orderStatus.setInitial(isInitial);
+        orderStatus.setFinal(isFinal);
+        orderStatus.setModifiable(isModifiable);
+        return orderStatus;
+    }
 }
