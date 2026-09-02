@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.order.status;
 
+import com.santiGalarza.order_management.common.base.Auditable;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderStatusTransition {
+public class OrderStatusTransition extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,7 +35,4 @@ public class OrderStatusTransition {
 
     @Column(name = "requires_role")
     private String requiresRole;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 }

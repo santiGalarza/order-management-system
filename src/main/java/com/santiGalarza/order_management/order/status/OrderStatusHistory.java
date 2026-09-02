@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.order.status;
 
+import com.santiGalarza.order_management.common.base.Auditable;
 import com.santiGalarza.order_management.order.core.Order;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderStatusHistory {
+public class OrderStatusHistory extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -38,9 +39,6 @@ public class OrderStatusHistory {
     private UUID changedBy;
 
     private String notes;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 
     public static OrderStatusHistory of(Order order, OrderStatus from, OrderStatus to, UUID changedBy, String notes) {
         OrderStatusHistory h = new OrderStatusHistory();
