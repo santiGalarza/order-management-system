@@ -32,12 +32,6 @@ public class Category extends Auditable {
 
     private String description;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
     private boolean isActive;
 
     @ManyToOne

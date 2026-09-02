@@ -50,11 +50,6 @@ public class Product extends Auditable {
     @Positive
     private float weight;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id")
     private Category category;
