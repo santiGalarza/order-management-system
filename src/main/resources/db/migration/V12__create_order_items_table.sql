@@ -3,5 +3,7 @@ CREATE TABLE order_items (
     product_id UUID NOT NULL REFERENCES products(id),
     order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     unit_price NUMERIC(8,2) NOT NULL,
-    quantity INTEGER NOT NULL
+    quantity INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
