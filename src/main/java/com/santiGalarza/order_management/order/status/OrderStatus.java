@@ -6,9 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,9 +27,14 @@ public class OrderStatus extends Auditable {
     @Column(nullable = false)
     private String label;
 
-    private boolean isInitial;
-    private boolean isFinal;
-    private boolean isModifiable;
+    @Column(name = "is_initial", nullable = false)
+    private boolean initial;
+
+    @Column(name = "is_final", nullable = false)
+    private boolean terminal;
+
+    @Column(name = "is_modifiable", nullable = false)
+    private boolean modifiable;
 
     @ElementCollection
     @CollectionTable(name = "order_status_metadata", joinColumns = @JoinColumn(name = "status_id"))
@@ -43,13 +46,13 @@ public class OrderStatus extends Auditable {
         return metadata != null ? metadata.get(key) : null;
     }
 
-    public static OrderStatus create(String code, String label, boolean isInitial, boolean isFinal, boolean isModifiable) {
+    public static OrderStatus create(String code, String label, boolean initial, boolean terminal, boolean modifiable) {
         OrderStatus orderStatus = new OrderStatus();
         orderStatus.setCode(code);
         orderStatus.setLabel(label);
-        orderStatus.setInitial(isInitial);
-        orderStatus.setFinal(isFinal);
-        orderStatus.setModifiable(isModifiable);
+        orderStatus.setInitial(initial);
+        orderStatus.setTerminal(terminal);
+        orderStatus.setModifiable(modifiable);
         return orderStatus;
     }
 }
