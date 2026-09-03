@@ -35,4 +35,12 @@ public class OrderStatusTransition extends Auditable {
 
     @Column(name = "requires_role")
     private String requiresRole;
+
+    public static OrderStatusTransition create(OrderStatus fromStatus, OrderStatus toStatus, String requiresRole) {
+        OrderStatusTransition transition = new OrderStatusTransition();
+        transition.setFromStatus(fromStatus);
+        transition.setToStatus(toStatus);
+        transition.setRequiresRole(requiresRole);
+        return transition;
+    }
 }
