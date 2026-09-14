@@ -1,6 +1,6 @@
 package com.santiGalarza.order_management.user;
 
-import com.santiGalarza.order_management.security.RequiresPermission;
+import com.santiGalarza.order_management.security.config.RequiresPermission;
 
 import com.santiGalarza.order_management.user.dto.*;
 import jakarta.validation.Valid;

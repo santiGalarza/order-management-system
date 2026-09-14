@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.security;
+package com.santiGalarza.order_management.security.config;
 
 import com.santiGalarza.order_management.user.UserRepository;
 import lombok.NonNull;

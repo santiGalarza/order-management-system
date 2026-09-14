@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.user.role;
 
+import com.santiGalarza.order_management.common.base.Auditable;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Role {
+public class Role extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -35,9 +36,6 @@ public class Role {
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
     private Set<Permission> permissions = new HashSet<>();
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 
     public static Role of(String name, String description) {
         Role role = new Role();

@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.user.role;
 
+import com.santiGalarza.order_management.common.base.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Permission {
+public class Permission extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,9 +28,6 @@ public class Permission {
     private String name;
 
     private String description;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 
     public static Permission of(String name, String description) {
         Permission permission = new Permission();

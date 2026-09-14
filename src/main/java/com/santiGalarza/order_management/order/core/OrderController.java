@@ -1,8 +1,8 @@
-package com.santiGalarza.order_management.order;
+package com.santiGalarza.order_management.order.core;
 
-import com.santiGalarza.order_management.order.dto.CreateOrderRequest;
-import com.santiGalarza.order_management.order.dto.OrderResponse;
-import com.santiGalarza.order_management.security.RequiresPermission;
+import com.santiGalarza.order_management.order.core.dto.CreateOrderRequest;
+import com.santiGalarza.order_management.order.core.dto.OrderResponse;
+import com.santiGalarza.order_management.security.config.RequiresPermission;
 import com.santiGalarza.order_management.order.item.dto.CreateItemRequest;
 import com.santiGalarza.order_management.order.item.dto.ItemResponse;
 import com.santiGalarza.order_management.order.item.dto.PatchItemRequest;

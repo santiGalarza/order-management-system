@@ -5,5 +5,6 @@ CREATE TABLE order_status_history (
     to_status_id UUID NOT NULL REFERENCES order_statuses(id),
     changed_by UUID,
     notes VARCHAR(255),
-    created_at TIMESTAMP NOT NULL DEFAULT now()
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP NOT NULL DEFAULT now()
 );

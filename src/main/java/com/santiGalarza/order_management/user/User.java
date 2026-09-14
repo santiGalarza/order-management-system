@@ -1,5 +1,6 @@
 package com.santiGalarza.order_management.user;
 
+import com.santiGalarza.order_management.common.base.Auditable;
 import com.santiGalarza.order_management.user.role.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class User implements UserDetails {
+public class User extends Auditable implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -61,12 +62,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

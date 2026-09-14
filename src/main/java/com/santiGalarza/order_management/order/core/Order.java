@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.order;
+package com.santiGalarza.order_management.order.core;
 
 import com.santiGalarza.order_management.common.base.Auditable;
 import com.santiGalarza.order_management.order.item.Item;
@@ -9,11 +9,7 @@ import jakarta.validation.constraints.Positive;
 
 import lombok.*;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,12 +27,6 @@ public class Order extends Auditable {
 
     @Positive
     private BigDecimal totalPrice;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "current_status_id")
@@ -60,5 +50,14 @@ public class Order extends Auditable {
                 .map(item -> item.getUnitPrice()
                         .multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public static Order create(BigDecimal totalPrice, OrderStatus currentStatus, List<Item> items, User user) {
+        Order order = new Order();
+        order.totalPrice = totalPrice;
+        order.currentStatus = currentStatus;
+        order.items = items;
+        order.user = user;
+        return order;
     }
 }

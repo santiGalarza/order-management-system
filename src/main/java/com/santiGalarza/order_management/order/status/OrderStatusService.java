@@ -1,7 +1,7 @@
 package com.santiGalarza.order_management.order.status;
 
-import com.santiGalarza.order_management.order.exception.MaxDeliveryAttemptsExceededException;
-import com.santiGalarza.order_management.order.Order;
+import com.santiGalarza.order_management.order.core.exception.MaxDeliveryAttemptsExceededException;
+import com.santiGalarza.order_management.order.core.Order;
 import com.santiGalarza.order_management.order.status.exception.InvalidOrderStatusTransitionException;
 import com.santiGalarza.order_management.order.status.exception.OrderStatusNotFoundException;
 import org.springframework.stereotype.Service;
@@ -62,7 +62,7 @@ public class OrderStatusService {
     }
 
     public OrderStatus getInitialStatus() {
-        return statusRepository.findByIsInitialTrue()
+        return statusRepository.findByInitialTrue()
                 .orElseThrow(() -> new IllegalStateException("No initial status configured"));
     }
 

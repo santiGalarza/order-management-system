@@ -5,5 +5,6 @@ CREATE TABLE order_statuses (
     is_initial BOOLEAN NOT NULL DEFAULT false,
     is_final BOOLEAN NOT NULL DEFAULT false,
     is_modifiable BOOLEAN NOT NULL DEFAULT false,
-    created_at TIMESTAMP NOT NULL DEFAULT now()
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP NOT NULL DEFAULT now()
 );

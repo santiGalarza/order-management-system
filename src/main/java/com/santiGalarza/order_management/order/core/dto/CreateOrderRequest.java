@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.order.dto;
+package com.santiGalarza.order_management.order.core.dto;
 
 import com.santiGalarza.order_management.order.item.dto.CreateItemRequest;
 import jakarta.validation.Valid;

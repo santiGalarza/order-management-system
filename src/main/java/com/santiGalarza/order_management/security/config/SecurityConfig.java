@@ -1,4 +1,4 @@
-package com.santiGalarza.order_management.security;
+package com.santiGalarza.order_management.security.config;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;

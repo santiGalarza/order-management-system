@@ -1,7 +1,7 @@
-package com.santiGalarza.order_management.order;
+package com.santiGalarza.order_management.order.core;
 
-import com.santiGalarza.order_management.order.dto.CreateOrderRequest;
-import com.santiGalarza.order_management.order.dto.OrderResponse;
+import com.santiGalarza.order_management.order.core.dto.CreateOrderRequest;
+import com.santiGalarza.order_management.order.core.dto.OrderResponse;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")

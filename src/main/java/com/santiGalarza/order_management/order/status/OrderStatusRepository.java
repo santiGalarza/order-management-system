@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface OrderStatusRepository extends JpaRepository<OrderStatus, UUID> {
     Optional<OrderStatus> findByCode(String code);
-    Optional<OrderStatus> findByIsInitialTrue();
+    Optional<OrderStatus> findByInitialTrue();
 }

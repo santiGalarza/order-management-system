@@ -1,5 +1,7 @@
 package com.santiGalarza.order_management.user;
 
+import com.santiGalarza.order_management.security.token.RefreshTokenRepository;
+import com.santiGalarza.order_management.security.token.RefreshTokenService;
 import com.santiGalarza.order_management.user.dto.*;
 import com.santiGalarza.order_management.user.exception.UserNotFoundException;
 import com.santiGalarza.order_management.user.role.Role;
@@ -20,12 +22,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final RefreshTokenService refreshTokenService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, RefreshTokenService refreshTokenService, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.refreshTokenService = refreshTokenService;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
@@ -68,6 +72,8 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         user.incrementTokenVersion();
         userRepository.save(user);
+
+        refreshTokenService.revokeAllForUser(user.getId());
     }
 
     @Transactional
